@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build sdl",
+            "type": "shell",
+            "command": "cl",
+            "args": [
+                "main.cpp",
+                "HotkeyManager.cpp",
+
+                "/I", "C:\\SDL2-2.32.4\\include",
+
+                "/link",
+                "/LIBPATH:C:\\SDL2-2.32.4\\lib\\x64",
+                "SDL2.lib",
+                "SDL2main.lib"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

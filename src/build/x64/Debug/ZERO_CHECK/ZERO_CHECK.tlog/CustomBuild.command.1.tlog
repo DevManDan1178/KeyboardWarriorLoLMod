@@ -1,0 +1,10 @@
+^D:\DOCUMENTS\CODING\CPP\KEYBOARDWARRIORLOLMOD\SRC\BUILD\CMAKEFILES\D0129C9E8BE44D8975819D2B2987E09B\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/Documents/Coding/CPP/KeyboardWarriorLoLMod/src -BD:/Documents/Coding/CPP/KeyboardWarriorLoLMod/src/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/src/build/KeyboardWarriorLoLMod.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,12 @@
+{
+  "hotkeys": {
+    "CTRL_ALT_1": {
+      "vk": 49,
+      "message": "game_start"
+    },
+    "CTRL_ALT_2": {
+      "vk": 50,
+      "message": "game_end"
+    }
+  }
+}

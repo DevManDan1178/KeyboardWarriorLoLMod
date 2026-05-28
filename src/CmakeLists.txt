@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(KeyboardWarriorLoLMod)
+
+set(SDL2_DIR "C:/SDL2-2.32.4")
+
+include_directories(${SDL2_DIR}/include)
+link_directories(${SDL2_DIR}/lib/x64)
+
+add_executable(KeyboardWarriorLoLMod 
+    main.cpp
+    HotkeyManager.cpp
+)
+target_link_libraries(KeyboardWarriorLoLMod SDL2)
