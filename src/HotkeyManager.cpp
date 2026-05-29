@@ -1,35 +1,68 @@
+#include "../external/json.hpp"
 #include "HotkeyManager.h"
 #include "ChatSender.h"
 #include <unordered_map>
-#include <windows.h>
-#include <SDL.h>
-#include <iostream>
-#define SDL_MAIN_HANDLED
 #include "HotkeyManager.h"
-#include <SDL.h>
 #include <iostream>
-/*
-Hotkeys for dynamic events, with different messageIds to configure messages according to dynamic events.
-Ex:
-Game over:
-message 1 (Id = 1): GG (Hotkey 1)
-message 2 (Id = 2): GGEZ (Hotkey 2)
+#include <filesystem>
+#include <fstream>
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
 
-*/
+
+using json = nlohmann::json;
+
+const std::filesystem::path path = std::filesystem::current_path() / "config/hotkeys.json";
+
 
 HotkeyManager::HotkeyManager(Messages& _messages)
-    : messages(_messages) {}
+: messages(_messages) {}
 
-void HotkeyManager::setup() {
-    // TODO
+static Hotkey parseHotkeyData(json hotkeyData) {
+    Hotkey hotkey;
+    hotkey.keyCode = hotkeyData.value("Key", 0u);
+    std::string bindType = hotkeyData.value("BindType", "");
+    hotkey.bindType = bindType == "Keyboard" ? BindType::Keyboard : (bindType == "Mouse" ? BindType::Mouse : BindType::None);
+    hotkey.modifiers = hotkeyData.value("Modifiers", 0u);
+    //std::cout << "Hotkey with key, bindtype, modifier: " << hotkey.keyCode << " " << bindType << " " << hotkey.modifiers << std::endl;
+    return hotkey;
 }
 
-void HotkeyManager::handleHotkey(int id) {
+bool HotkeyManager::load() {
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        std::cout << "Failed to open file at path " << path << std::endl;
+        return false;
+    }
+    
+    json hotkeysData;
+    file >> hotkeysData;
+    //TODO: Read from the file to assign corresponding values to messages and hotkeys vectors
+    std::cout << "Successfully retrieved hotkeys\n" << hotkeysData.dump(4) << std::endl;
+    
+    //Get default keybinds
+    json defaultHotkeys = hotkeysData["Defaults"];
+    for (int i = 0; i < defaultHotkeys.size(); i++) {
+        Hotkey hotkey = parseHotkeyData(defaultHotkeys[i]);
+        HotkeyManager::defaultHotkeys.push_back(hotkey);
+    }
+
+    //Get event keybinds
+    json eventHotkeys = hotkeysData["Events"];
+    for (int i = 0; i < eventHotkeys.size(); i++) {
+        Hotkey hotkey = parseHotkeyData(eventHotkeys[i]);
+        HotkeyManager::eventHotkeys.push_back(hotkey);
+    }
+    
+    return true;
+}
+
+
+void HotkeyManager::handleHotkey(Hotkey keybind) {
     // TODO ChatSender usage
 }
 
-
-Keybind HotkeyManager::getKeybind()
+Hotkey HotkeyManager::getHotkey()
 {
     SDL_Event event;
 
@@ -39,20 +72,23 @@ Keybind HotkeyManager::getKeybind()
         {
             if (event.type == SDL_KEYDOWN)
             {
-                return { BindType::Keyboard, event.key.keysym.sym };
+                return { event.key.keysym.sym, BindType::Keyboard, };
             }
 
             if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                return { BindType::Mouse, event.button.button };
+                return { event.button.button, BindType::Mouse, };
             }
 
             if (event.type == SDL_QUIT)
             {
-                return { BindType::None, -1 };
+                return { -1, BindType::None, };
             }
         }
 
         SDL_Delay(1);
     }
 }
+
+
+

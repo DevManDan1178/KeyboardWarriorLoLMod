@@ -1,0 +1,17 @@
+{
+    "Events" : [
+        {
+            "Key" : 50,
+            "BindType" : "Keyboard",
+            "Modifiers" : 0
+        }
+    ],
+    "Defaults" : [ 
+        {
+            "Key" : 52,
+            "BindType" : "Keyboard",
+            "Modifiers" : 0
+        }  
+    ]
+    
+}

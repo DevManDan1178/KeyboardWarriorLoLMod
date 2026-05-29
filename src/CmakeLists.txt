@@ -1,6 +1,7 @@
 add_executable(KeyboardWarriorLoLMod
     main.cpp
     HotkeyManager.cpp
+    Messages.cpp
 )
 
 target_link_libraries(KeyboardWarriorLoLMod PRIVATE

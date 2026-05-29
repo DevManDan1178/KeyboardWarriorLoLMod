@@ -1,0 +1,24 @@
+{
+    "GameStart" : [
+        {
+            "Title": "Hello", 
+            "Message" : "Hello"
+        }
+    ],
+    "GameEnd" : [
+
+    ],
+    "FirstBlood" : [
+        
+    ],
+    "Kill" : [
+        
+    ], 
+    "Defaults" : [
+        {
+            "Title": "Hello", 
+            "Message" : "Hello - default message"
+       }
+    ]
+    
+}

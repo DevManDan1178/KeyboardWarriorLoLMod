@@ -7,10 +7,11 @@
 #include <uiohook.h>
 #include <iostream>
 
-// Dear ImGui
+//ImGui
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
+
 
 int main() {
     // Initialize SDL
@@ -47,8 +48,17 @@ int main() {
     ImGui_ImplOpenGL3_Init("#version 330");
 
     //Logic
-    //Messages& messages;
-    //HotkeyManager hotkeyManager(messages);
+    Messages& messages = *(new Messages());
+    bool success = messages.load();
+    if (!success) {
+        return 0;
+    }
+    HotkeyManager hotkeyManager(messages);
+    std::cout << "loading hotkeys" << std::endl;
+    success = hotkeyManager.load();
+    if (!success) {
+        return 0;
+    }
 
     bool running = true;
     bool windowHidden = false;
@@ -70,16 +80,15 @@ int main() {
         ImGui::NewFrame();
         
         // ImGui UI
-        ImGui::Begin("Debug Panel");
+        ImGui::Begin("Panel");
+
 
         //Input detection (makes app uncloseable)
         //Keybind kb = hotkeyManager.getKeybind();
         //ImGui::Text("Detected key code: %d", kb.keyCode);
 
-        if (ImGui::Button("Test Button")) {
-            std::cout << "Button clicked!" << std::endl;
-        }
 
+        //UI END
         ImGui::End();
 
         // Rendering

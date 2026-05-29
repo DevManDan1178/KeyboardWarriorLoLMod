@@ -1,10 +1,8 @@
 #pragma once
 #include "Messages.h"
-
-struct Hotkey {
-    int key;
-    int messageId;
-};
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 enum class BindType {
     Keyboard, Mouse, None
@@ -17,22 +15,24 @@ enum Modifiers {
     Alt = 1 << 2,
 };
 
-struct Keybind {
-    BindType bindType;
+struct Hotkey {
     int keyCode;
+    BindType bindType;
     uint8_t modifiers; //Bitmask from enum Modifiers
 };
 
 
+
 class HotkeyManager {
-public:
-    Messages& messages;
-    HotkeyManager(Messages& messages);
-    void setup();
-    Keybind getKeybind();
+    public:
+        Messages& messages;
+        HotkeyManager(Messages& messages);
+        bool load();
+        Hotkey getHotkey();
 
     private:
-    
-    void handleHotkey(int id);
+        std::vector<Hotkey> eventHotkeys;
+        std::vector<Hotkey> defaultHotkeys;
+        void handleHotkey(Hotkey keybind);
 };
 
