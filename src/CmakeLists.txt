@@ -1,14 +1,43 @@
-cmake_minimum_required(VERSION 3.10)
-
-project(KeyboardWarriorLoLMod)
-
-set(SDL2_DIR "C:/SDL2-2.32.4")
-
-include_directories(${SDL2_DIR}/include)
-link_directories(${SDL2_DIR}/lib/x64)
-
-add_executable(KeyboardWarriorLoLMod 
+add_executable(KeyboardWarriorLoLMod
     main.cpp
     HotkeyManager.cpp
 )
-target_link_libraries(KeyboardWarriorLoLMod SDL2)
+
+target_link_libraries(KeyboardWarriorLoLMod PRIVATE
+    SDL2
+    uiohook
+    opengl32
+)
+
+
+# ImGui source files
+target_sources(KeyboardWarriorLoLMod PRIVATE
+    ../external/imgui/imgui.cpp
+    ../external/imgui/imgui_draw.cpp
+    ../external/imgui/imgui_tables.cpp
+    ../external/imgui/imgui_widgets.cpp
+    ../external/imgui/imgui_demo.cpp
+    ../external/imgui/backends/imgui_impl_sdl2.cpp
+    ../external/imgui/backends/imgui_impl_opengl3.cpp
+)
+
+# Include directories
+target_include_directories(KeyboardWarriorLoLMod PRIVATE
+    ../external/imgui
+    ../external/imgui/backends
+    ${SDL2_DIR}/include
+)
+
+
+# Runtime DLL copy
+add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${SDL2_DIR}/lib/x64/SDL2.dll"
+        $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>
+)
+
+add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:uiohook>
+        $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>
+)

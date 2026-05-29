@@ -1,3 +1,0 @@
-D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/src/build/CMakeFiles/KeyboardWarriorLoLMod.dir
-D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/src/build/CMakeFiles/ALL_BUILD.dir
-D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/src/build/CMakeFiles/ZERO_CHECK.dir

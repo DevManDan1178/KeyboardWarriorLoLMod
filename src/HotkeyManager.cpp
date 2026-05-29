@@ -17,16 +17,6 @@ message 2 (Id = 2): GGEZ (Hotkey 2)
 
 */
 
-
-
-struct Hotkey {
-    int key;
-    int messageId;
-};
-
-
-
-
 HotkeyManager::HotkeyManager(Config& _config)
     : config(_config) {}
 
@@ -39,18 +29,28 @@ void HotkeyManager::handleHotkey(int id) {
 }
 
 
-int HotkeyManager::getKeybind() {
+Keybind HotkeyManager::getKeybind()
+{
     SDL_Event event;
-    while (true) {
-        while (SDL_PollEvent(&event)) {
+
+    while (true)
+    {
+        while (SDL_PollEvent(&event))
+        {
             if (event.type == SDL_KEYDOWN)
-                return event.key.keysym.sym;
+            {
+                return { BindType::Keyboard, event.key.keysym.sym };
+            }
 
             if (event.type == SDL_MOUSEBUTTONDOWN)
-                return event.button.button;
+            {
+                return { BindType::Mouse, event.button.button };
+            }
 
             if (event.type == SDL_QUIT)
-                return -1;
+            {
+                return { BindType::None, -1 };
+            }
         }
 
         SDL_Delay(1);
