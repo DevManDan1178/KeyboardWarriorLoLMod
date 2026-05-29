@@ -4,6 +4,3 @@
 [submodule "external/imgui"]
 	path = external/imgui
 	url = https://github.com/ocornut/imgui
-[submodule "external/cpr"]
-	path = external/cpr
-	url = https://github.com/libcpr/cpr.git
