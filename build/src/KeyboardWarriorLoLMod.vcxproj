@@ -86,15 +86,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/SDL2-2.32.4/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-debug\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck></BufferSecurityCheck>
       <CallingConvention></CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <FloatingPointModel></FloatingPointModel>
       <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
@@ -115,10 +113,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-debug\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-debug\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -126,18 +124,9 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>	</Message>
+      <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/SDL2-2.32.4/lib/x64/SDL2.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/Debug
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/Debug/uiohook.lib D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/Debug
+"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/Debug/SDL2d.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/Debug
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -147,7 +136,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\SDL2-2.32.4\lib\x64\SDL2.lib;..\external\libuiohook\Debug\uiohook.lib;opengl32.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\external\libuiohook\Debug\uiohook.lib;opengl32.lib;..\external\SDL\Debug\SDL2d.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -166,14 +155,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/SDL2-2.32.4/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-release\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <BufferSecurityCheck></BufferSecurityCheck>
       <CallingConvention></CallingConvention>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <FloatingPointModel></FloatingPointModel>
       <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -196,10 +183,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-release\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-release\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -207,18 +194,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>	</Message>
+      <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/SDL2-2.32.4/lib/x64/SDL2.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/Release
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/Release/uiohook.lib D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/Release
+"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/Release/SDL2.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/Release
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -228,7 +206,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\SDL2-2.32.4\lib\x64\SDL2.lib;..\external\libuiohook\Release\uiohook.lib;opengl32.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\external\libuiohook\Release\uiohook.lib;opengl32.lib;..\external\SDL\Release\SDL2.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -247,14 +225,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/SDL2-2.32.4/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-minsizerel\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <BufferSecurityCheck></BufferSecurityCheck>
       <CallingConvention></CallingConvention>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <FloatingPointModel></FloatingPointModel>
       <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -277,10 +253,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-minsizerel\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-minsizerel\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -288,18 +264,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>	</Message>
+      <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/SDL2-2.32.4/lib/x64/SDL2.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/MinSizeRel
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/MinSizeRel/uiohook.lib D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/MinSizeRel
+"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/MinSizeRel/SDL2.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/MinSizeRel
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -309,7 +276,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\SDL2-2.32.4\lib\x64\SDL2.lib;..\external\libuiohook\MinSizeRel\uiohook.lib;opengl32.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\external\libuiohook\MinSizeRel\uiohook.lib;opengl32.lib;..\external\SDL\MinSizeRel\SDL2.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -328,15 +295,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/SDL2-2.32.4/include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-relwithdebinfo\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <BufferSecurityCheck></BufferSecurityCheck>
       <CallingConvention></CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <FloatingPointModel></FloatingPointModel>
       <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -357,10 +322,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-relwithdebinfo\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;C:\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\src\..\external\imgui\backends;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\include-config-relwithdebinfo\SDL2;D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\external\libuiohook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -368,18 +333,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <PostBuildEvent>
-      <Message>	</Message>
+      <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different C:/SDL2-2.32.4/lib/x64/SDL2.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/RelWithDebInfo
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd
-setlocal
-"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/RelWithDebInfo/uiohook.lib D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/RelWithDebInfo
+"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy_if_different D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/RelWithDebInfo/SDL2.dll D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/RelWithDebInfo
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -389,7 +345,7 @@ exit /b %1
 if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>C:\SDL2-2.32.4\lib\x64\SDL2.lib;..\external\libuiohook\RelWithDebInfo\uiohook.lib;opengl32.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>..\external\libuiohook\RelWithDebInfo\uiohook.lib;opengl32.lib;..\external\SDL\RelWithDebInfo\SDL2.lib;Advapi32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <DataExecutionPrevention></DataExecutionPrevention>
@@ -481,6 +437,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\SDL2.vcxproj">
+      <Project>{B1796F1E-7BF5-344D-AFDC-F237758C2244}</Project>
+      <Name>SDL2</Name>
     </ProjectReference>
     <ProjectReference Include="D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\libuiohook\uiohook.vcxproj">
       <Project>{707DB44F-02A7-3419-A8F5-02F81BB1A314}</Project>

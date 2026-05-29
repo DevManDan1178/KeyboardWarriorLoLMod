@@ -178,6 +178,22 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{ACE6C63B-B3DD-36E6-B74C-809A847EF31B}</Project>
       <Name>KeyboardWarriorLoLMod</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\SDL2.vcxproj">
+      <Project>{B1796F1E-7BF5-344D-AFDC-F237758C2244}</Project>
+      <Name>SDL2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\SDL2-static.vcxproj">
+      <Project>{4AEA6074-CF25-3825-98CC-5CAF1B1030F7}</Project>
+      <Name>SDL2-static</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\SDL2_test.vcxproj">
+      <Project>{29439945-77F0-31EB-B00E-3B2313701167}</Project>
+      <Name>SDL2_test</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\SDL\SDL2main.vcxproj">
+      <Project>{D5CEA220-6EFA-383F-BB6E-6DCA9216BAAD}</Project>
+      <Name>SDL2main</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Documents\Coding\CPP\KeyboardWarriorLoLMod\build\external\libuiohook\uiohook.vcxproj">
       <Project>{707DB44F-02A7-3419-A8F5-02F81BB1A314}</Project>
       <Name>uiohook</Name>

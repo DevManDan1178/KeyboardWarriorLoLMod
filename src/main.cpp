@@ -1,4 +1,4 @@
-#include "Config.h"
+#include "Messages.h"
 #include "HotkeyManager.h"
 
 #define SDL_MAIN_HANDLED
@@ -46,9 +46,9 @@ int main() {
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    // Logic
-    Config config;
-    HotkeyManager hotkeyManager(config);
+    //Logic
+    //Messages& messages;
+    //HotkeyManager hotkeyManager(messages);
 
     bool running = true;
     bool windowHidden = false;

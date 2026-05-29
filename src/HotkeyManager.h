@@ -26,8 +26,8 @@ struct Keybind {
 
 class HotkeyManager {
 public:
-    Config& config;
-    HotkeyManager(Config& config);
+    Messages& messages;
+    HotkeyManager(Messages& messages);
     void setup();
     Keybind getKeybind();
 

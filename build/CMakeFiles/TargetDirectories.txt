@@ -1,6 +1,14 @@
 D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/CMakeFiles/INSTALL.dir
 D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/CMakeFiles/ALL_BUILD.dir
 D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/CMakeFiles/ZERO_CHECK.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/sdl_headers_copy.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/SDL2main.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/SDL2.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/SDL2-static.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/SDL2_test.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/uninstall.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/INSTALL.dir
+D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/CMakeFiles/ALL_BUILD.dir
 D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/CMakeFiles/uiohook.dir
 D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/CMakeFiles/INSTALL.dir
 D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/CMakeFiles/ALL_BUILD.dir

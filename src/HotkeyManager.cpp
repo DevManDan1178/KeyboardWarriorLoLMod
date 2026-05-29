@@ -17,8 +17,8 @@ message 2 (Id = 2): GGEZ (Hotkey 2)
 
 */
 
-HotkeyManager::HotkeyManager(Config& _config)
-    : config(_config) {}
+HotkeyManager::HotkeyManager(Messages& _messages)
+    : messages(_messages) {}
 
 void HotkeyManager::setup() {
     // TODO

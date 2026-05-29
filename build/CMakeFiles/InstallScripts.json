@@ -2,6 +2,7 @@
 	"InstallScripts" : 
 	[
 		"D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/cmake_install.cmake",
+		"D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL/cmake_install.cmake",
 		"D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook/cmake_install.cmake",
 		"D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/src/cmake_install.cmake"
 	],

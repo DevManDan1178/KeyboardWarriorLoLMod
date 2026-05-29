@@ -14,8 +14,17 @@
 # EXTERNAL cache entries
 ########################
 
+BUILD_CPR_TESTS:BOOL=OFF
+
+//Path to a program.
+CCACHE_BINARY:FILEPATH=CCACHE_BINARY-NOTFOUND
+
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/lib.exe
+
+//Choose the type of build, standard options are: Debug Release
+// RelWithDebInfo MinSizeRel.
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Semicolon separated list of supported configuration types, only
 // supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
@@ -254,6 +263,170 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Set to ON to build cpr tests.
+CPR_BUILD_TESTS:BOOL=OFF
+
+//Set to ON to build proxy tests. They fail in case there is no
+// valid proxy server available in proxy_tests.cpp
+CPR_BUILD_TESTS_PROXY:BOOL=OFF
+
+//Set to ON to build cpr ssl tests
+CPR_BUILD_TESTS_SSL:BOOL=OFF
+
+//Set to ON to only export the version into 'build/version.txt'
+// and exit
+CPR_BUILD_VERSION_OUTPUT_ONLY:BOOL=OFF
+
+//Set to ON to disable use of signals in libcurl.
+CPR_CURL_NOSIGNAL:BOOL=OFF
+
+//Since curl 8.13 curl depends on libpsl (https://everything.curl.dev/build/deps.html#libpsl).
+// By default cpr keeps this as a secure default enabled wich in
+// turn requires meson as build dependency. If set to OFF, psl
+// support inside curl will be disabled.
+CPR_CURL_USE_LIBPSL:BOOL=ON
+
+//Enables the AddressSanitizer for debug builds.
+CPR_DEBUG_SANITIZER_FLAG_ADDR:BOOL=OFF
+
+//Enables all sanitizers for debug builds except the ThreadSanitizer
+// since it is incompatible with the other sanitizers.
+CPR_DEBUG_SANITIZER_FLAG_ALL:BOOL=OFF
+
+//Enables the LeakSanitizer for debug builds.
+CPR_DEBUG_SANITIZER_FLAG_LEAK:BOOL=OFF
+
+//Enables the ThreadSanitizer for debug builds.
+CPR_DEBUG_SANITIZER_FLAG_THREAD:BOOL=OFF
+
+//Enables the UndefinedBehaviorSanitizer for debug builds.
+CPR_DEBUG_SANITIZER_FLAG_UB:BOOL=OFF
+
+//Set to ON to enable Cppcheck static analysis. Requires CPR_BUILD_TESTS
+// and CPR_BUILD_TESTS_SSL to be OFF to prevent checking google
+// tests source code.
+CPR_ENABLE_CPPCHECK:BOOL=OFF
+
+//If enabled we will only use the HTTP/HTTPS protocols from CURL.
+// If disabled, all the CURL protocols are enabled. This is useful
+// if your project uses libcurl and you need support for other
+// CURL features e.g. sending emails.
+CPR_ENABLE_CURL_HTTP_ONLY:BOOL=ON
+
+//Set to ON to enable all cpr install targets.
+CPR_ENABLE_INSTALL:BOOL=ON
+
+//Set to ON to enable clang linting.
+CPR_ENABLE_LINTING:BOOL=OFF
+
+//Enables or disables the SSL backend. Required to perform HTTPS
+// requests.
+CPR_ENABLE_SSL:BOOL=OFF
+
+//Force to use the DarwinSSL backend. If CPR_FORCE_OPENSSL_BACKEND,
+// CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and
+// CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to
+// automatically detect the best available SSL backend (WinSSL
+// - Windows, OpenSSL - Linux, DarwinSSL - Mac ...).
+CPR_FORCE_DARWINSSL_BACKEND:BOOL=OFF
+
+//Force to use the Mbed TLS backend. If CPR_FORCE_OPENSSL_BACKEND,
+// CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and
+// CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to
+// automatically detect the best available SSL backend (WinSSL
+// - Windows, OpenSSL - Linux, DarwinSSL - Mac ...).
+CPR_FORCE_MBEDTLS_BACKEND:BOOL=OFF
+
+//Force to use the OpenSSL backend. If CPR_FORCE_OPENSSL_BACKEND,
+// CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and
+// CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to
+// automatically detect the best available SSL backend (WinSSL
+// - Windows, OpenSSL - Linux, DarwinSSL - Mac ...).
+CPR_FORCE_OPENSSL_BACKEND:BOOL=OFF
+
+//Force to use the WinSSL backend. If CPR_FORCE_OPENSSL_BACKEND,
+// CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and
+// CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to
+// automatically detect the best available SSL backend (WinSSL
+// - Windows, OpenSSL - Linux, DarwinSSL - Mac ...).
+CPR_FORCE_WINSSL_BACKEND:BOOL=OFF
+
+//Set to ON to generate coverage reports.
+CPR_GENERATE_COVERAGE:BOOL=OFF
+
+//Skip searching for Certificate Authority certs. Turn ON for systems
+// like iOS where file access is restricted and prevents https
+// from working.
+CPR_SKIP_CA_BUNDLE_SEARCH:BOOL=OFF
+
+//Set to ON to use the Boost.Filesystem library. This is useful,
+// on, e.g., Apple platforms, where std::filesystem may not always
+// be available when targeting older OS versions.
+CPR_USE_BOOST_FILESYSTEM:BOOL=OFF
+
+//Use an existing libcurl cmake target instead of having the cpr
+// project source the dependency itself.
+CPR_USE_EXISTING_CURL_TARGET:BOOL=OFF
+
+//If enabled we will use the curl lib already installed on this
+// system.
+CPR_USE_SYSTEM_CURL:BOOL=OFF
+
+//If ON, this project will look in the system paths for an installed
+// gtest library. If none is found it will use the built-in one.
+CPR_USE_SYSTEM_GTEST:BOOL=OFF
+
+//If enabled we will use the psl lib already installed on this
+// system. Else meson is required as build dependency. Only relevant
+// in case 'CPR_CURL_USE_LIBPSL' is set to ON.
+CPR_USE_SYSTEM_LIB_PSL:BOOL=OFF
+
+//Path to a program.
+CURL_CONFIG_EXECUTABLE:FILEPATH=CURL_CONFIG_EXECUTABLE-NOTFOUND
+
+//The directory containing a CMake configuration file for CURL.
+CURL_DIR:PATH=CURL_DIR-NOTFOUND
+
+//Path to a file.
+CURL_INCLUDE_DIR:PATH=CURL_INCLUDE_DIR-NOTFOUND
+
+//Path to a library.
+CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
+
+//Path to a library.
+CURL_LIBRARY_RELEASE:FILEPATH=CURL_LIBRARY_RELEASE-NOTFOUND
+
+//Curl verbose logging during building curl
+CURL_VERBOSE_LOGGING:BOOL=OFF
+
+CURL_ZLIB:BOOL=ON
+
+//Directory under which to collect all populated content
+FETCHCONTENT_BASE_DIR:PATH=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/_deps
+
+//Disables all attempts to download or update content and assumes
+// source dirs already exist
+FETCHCONTENT_FULLY_DISCONNECTED:BOOL=OFF
+
+//Enables QUIET option for all content population
+FETCHCONTENT_QUIET:BOOL=ON
+
+//When not empty, overrides where to find pre-populated content
+// for zlib
+FETCHCONTENT_SOURCE_DIR_ZLIB:PATH=
+
+//Enables UPDATE_DISCONNECTED behavior for all content population
+FETCHCONTENT_UPDATES_DISCONNECTED:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of zlib
+FETCHCONTENT_UPDATES_DISCONNECTED_ZLIB:BOOL=OFF
+
+//Git command line client
+GIT_EXECUTABLE:FILEPATH=C:/Program Files/Git/cmd/git.exe
+
+//Copy minigzip and minideflate during install
+INSTALL_UTILS:BOOL=OFF
+
 //Value Computed by CMake
 KeyboardWarriorLoLMod_BINARY_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build
 
@@ -262,6 +435,381 @@ KeyboardWarriorLoLMod_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 KeyboardWarriorLoLMod_SOURCE_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod
+
+//Path to a program.
+MESON_PATH:FILEPATH=MESON_PATH-NOTFOUND
+
+//Installation directory for pkgconfig (.pc) files
+PKGCONFIG_INSTALL_DIR:PATH=lib/pkgconfig
+
+//Arguments to supply to pkg-config
+PKG_CONFIG_ARGN:STRING=
+
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=PKG_CONFIG_EXECUTABLE-NOTFOUND
+
+//Dependencies for the target
+SDL2-static_LIB_DEPENDS:STATIC=general;kernel32;general;user32;general;gdi32;general;winmm;general;imm32;general;ole32;general;oleaut32;general;version;general;uuid;general;advapi32;general;setupapi;general;shell32;general;dinput8;
+
+//Value Computed by CMake
+SDL2_BINARY_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/SDL
+
+//Disable installation of SDL2
+SDL2_DISABLE_INSTALL:BOOL=ON
+
+//Disable building/installation of SDL2main
+SDL2_DISABLE_SDL2MAIN:BOOL=OFF
+
+//Disable uninstallation of SDL2
+SDL2_DISABLE_UNINSTALL:BOOL=OFF
+
+//Value Computed by CMake
+SDL2_IS_TOP_LEVEL:STATIC=OFF
+
+//Dependencies for the target
+SDL2_LIB_DEPENDS:STATIC=general;kernel32;general;user32;general;gdi32;general;winmm;general;imm32;general;ole32;general;oleaut32;general;version;general;uuid;general;advapi32;general;setupapi;general;shell32;general;dinput8;
+
+//Value Computed by CMake
+SDL2_SOURCE_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/external/SDL
+
+//Dependencies for the target
+SDL2main_LIB_DEPENDS:STATIC=general;shell32;
+
+//Use 3Dnow! MMX assembly routines
+SDL_3DNOW:BOOL=OFF
+
+//Support the ALSA audio API
+SDL_ALSA:BOOL=OFF
+
+//Use Altivec assembly routines
+SDL_ALTIVEC:BOOL=ON
+
+//Support the Analog Real Time Synthesizer
+SDL_ARTS:BOOL=OFF
+
+//Use AddressSanitizer to detect memory errors
+SDL_ASAN:BOOL=OFF
+
+//Enable assembly routines
+SDL_ASSEMBLY:BOOL=ON
+
+//Enable internal sanity checks (auto/disabled/release/enabled/paranoid)
+SDL_ASSERTIONS:STRING=auto
+
+//Enable the Atomic subsystem
+SDL_ATOMIC:BOOL=ON
+
+//Enable the Audio subsystem
+SDL_AUDIO:BOOL=ON
+
+//number to use for magic backgrounding signal or 'OFF'
+SDL_BACKGROUNDING_SIGNAL:STRING=OFF
+
+//Use Ccache to speed up build
+SDL_CCACHE:BOOL=ON
+
+//Use clock_gettime() instead of gettimeofday()
+SDL_CLOCK_GETTIME:BOOL=OFF
+
+//Name suffix for debug builds
+SDL_CMAKE_DEBUG_POSTFIX:STRING=d
+
+//Use Cocoa video driver
+SDL_COCOA:BOOL=OFF
+
+//Enable the CPUinfo subsystem
+SDL_CPUINFO:BOOL=ON
+
+//Use DirectFB video driver
+SDL_DIRECTFB:BOOL=OFF
+
+//Use DirectX for Windows audio/video
+SDL_DIRECTX:BOOL=ON
+
+//Support the disk writer audio driver
+SDL_DISKAUDIO:BOOL=ON
+
+//Support the dummy audio driver
+SDL_DUMMYAUDIO:BOOL=ON
+
+//Use dummy video driver
+SDL_DUMMYVIDEO:BOOL=ON
+
+//Support the Enlightened Sound Daemon
+SDL_ESD:BOOL=OFF
+
+//Enable the Events subsystem
+SDL_EVENTS:BOOL=ON
+
+//Enable the File subsystem
+SDL_FILE:BOOL=ON
+
+//Enable the Filesystem subsystem
+SDL_FILESYSTEM:BOOL=ON
+
+//Force /MT for static VC runtimes
+SDL_FORCE_STATIC_VCRT:BOOL=OFF
+
+//number to use for magic foregrounding signal or 'OFF'
+SDL_FOREGROUNDING_SIGNAL:STRING=OFF
+
+//Use FusionSound audio driver
+SDL_FUSIONSOUND:BOOL=OFF
+
+//Use gcc builtin atomics
+SDL_GCC_ATOMICS:BOOL=OFF
+
+//Enable the Haptic subsystem
+SDL_HAPTIC:BOOL=ON
+
+//Enable the HIDAPI subsystem
+SDL_HIDAPI:BOOL=ON
+
+//Use HIDAPI for low level joystick drivers
+SDL_HIDAPI_JOYSTICK:BOOL=ON
+
+SDL_HIDAPI_LIBUSB:BOOL=OFF
+
+//Install test-cases
+SDL_INSTALL_TESTS:BOOL=OFF
+
+//Support the JACK audio API
+SDL_JACK:BOOL=OFF
+
+//Enable the Joystick subsystem
+SDL_JOYSTICK:BOOL=ON
+
+//Use KMS DRM video driver
+SDL_KMSDRM:BOOL=OFF
+
+//Use the system C library
+SDL_LIBC:BOOL=OFF
+
+//Prefer iconv() from libiconv, if available, over libc version
+SDL_LIBICONV:BOOL=OFF
+
+//Use libsamplerate for audio rate conversion
+SDL_LIBSAMPLERATE:BOOL=OFF
+
+//Enable libudev support
+SDL_LIBUDEV:BOOL=ON
+
+//Enable the Loadso subsystem
+SDL_LOADSO:BOOL=ON
+
+//Enable the Locale subsystem
+SDL_LOCALE:BOOL=ON
+
+//Enable Metal support
+SDL_METAL:BOOL=OFF
+
+//Enable the Misc subsystem
+SDL_MISC:BOOL=ON
+
+//Use MMX assembly routines
+SDL_MMX:BOOL=ON
+
+//Support the NAS audio API
+SDL_NAS:BOOL=OFF
+
+//Use offscreen video driver
+SDL_OFFSCREEN:BOOL=ON
+
+//Include OpenGL support
+SDL_OPENGL:BOOL=ON
+
+//Include OpenGL ES support
+SDL_OPENGLES:BOOL=ON
+
+//Use Pipewire audio
+SDL_PIPEWIRE:BOOL=OFF
+
+//Enable the Power subsystem
+SDL_POWER:BOOL=ON
+
+//Use POSIX threads for multi-threading
+SDL_PTHREADS:BOOL=OFF
+
+//Use PulseAudio
+SDL_PULSEAUDIO:BOOL=OFF
+
+//Enable the Render subsystem
+SDL_RENDER:BOOL=ON
+
+//Enable the Direct3D render driver
+SDL_RENDER_D3D:BOOL=ON
+
+//Enable the Metal render driver
+SDL_RENDER_METAL:BOOL=OFF
+
+//Use an rpath when linking SDL
+SDL_RPATH:BOOL=OFF
+
+//Use Raspberry Pi 0-3 video driver
+SDL_RPI:BOOL=OFF
+
+//Enable the Sensor subsystem
+SDL_SENSOR:BOOL=ON
+
+//Build a shared version of the library
+SDL_SHARED:BOOL=ON
+
+//Support the sndio audio API
+SDL_SNDIO:BOOL=OFF
+
+//Use SSE assembly routines
+SDL_SSE:BOOL=ON
+
+//Use SSE2 assembly routines
+SDL_SSE2:BOOL=ON
+
+//Use SSE3 assembly routines
+SDL_SSE3:BOOL=ON
+
+//Allow GCC to use SSE floating point math
+SDL_SSEMATH:BOOL=ON
+
+//Build a static version of the library
+SDL_STATIC:BOOL=ON
+
+//Static version of the library should be built with Position Independent
+// Code
+SDL_STATIC_PIC:BOOL=OFF
+
+//Use iconv() from system-installed libraries
+SDL_SYSTEM_ICONV:BOOL=OFF
+
+//Build the SDL2_test library
+SDL_TEST:BOOL=ON
+
+//Build the test directory
+SDL_TESTS:BOOL=OFF
+
+//Enable the Threads subsystem
+SDL_THREADS:BOOL=ON
+
+//Enable the Timers subsystem
+SDL_TIMERS:BOOL=ON
+
+//Vendor name and/or version to add to SDL_REVISION
+SDL_VENDOR_INFO:STRING=
+
+//Enable the Video subsystem
+SDL_VIDEO:BOOL=ON
+
+//Enable the virtual-joystick driver
+SDL_VIRTUAL_JOYSTICK:BOOL=ON
+
+//Use Vivante EGL video driver
+SDL_VIVANTE:BOOL=OFF
+
+//Enable Vulkan support
+SDL_VULKAN:BOOL=ON
+
+//Use the Windows WASAPI audio driver
+SDL_WASAPI:BOOL=ON
+
+//Use Wayland video driver
+SDL_WAYLAND:BOOL=OFF
+
+//Enable -Werror
+SDL_WERROR:BOOL=OFF
+
+//Use X11 video driver
+SDL_X11:BOOL=OFF
+
+//Use Xinput for Windows
+SDL_XINPUT:BOOL=ON
+
+//Path to a program.
+WINDRES:FILEPATH=WINDRES-NOTFOUND
+
+//Build with AVX2
+WITH_AVX2:BOOL=ON
+
+//Build with AVX512
+WITH_AVX512:BOOL=ON
+
+//Build with AVX512 VNNI extensions
+WITH_AVX512VNNI:BOOL=ON
+
+//Build test/benchmarks
+WITH_BENCHMARKS:BOOL=OFF
+
+//Build application benchmarks
+WITH_BENCHMARK_APPS:BOOL=OFF
+
+//Enable code coverage reporting
+WITH_CODE_COVERAGE:BOOL=OFF
+
+//Build test/fuzz
+WITH_FUZZERS:BOOL=OFF
+
+//Build gtest_zlib
+WITH_GTEST:BOOL=ON
+
+//Compile with support for gzFile related functions
+WITH_GZFILEOP:BOOL=ON
+
+//Build with zero fill for inflate invalid distances
+WITH_INFLATE_ALLOW_INVALID_DIST:BOOL=OFF
+
+//Build with strict inflate distance checking
+WITH_INFLATE_STRICT:BOOL=OFF
+
+//Build with project maintainer warnings
+WITH_MAINTAINER_WARNINGS:BOOL=OFF
+
+//Instruct the compiler to use the full instruction set on this
+// host (gcc/clang -march=native)
+WITH_NATIVE_INSTRUCTIONS:BOOL=OFF
+
+//Use new strategies
+WITH_NEW_STRATEGIES:BOOL=ON
+
+//Build with optimisation
+WITH_OPTIM:BOOL=ON
+
+//Build with PCLMULQDQ
+WITH_PCLMULQDQ:BOOL=ON
+
+//Reduced memory usage for special cases (reduces performance)
+WITH_REDUCED_MEM:BOOL=OFF
+
+//Enable sanitizer support
+WITH_SANITIZER:STRING=AUTO
+
+//Build with SSE2
+WITH_SSE2:BOOL=ON
+
+//Build with SSE42
+WITH_SSE42:BOOL=ON
+
+//Build with SSSE3
+WITH_SSSE3:BOOL=ON
+
+//Support unaligned reads on platforms that support it
+WITH_UNALIGNED:BOOL=ON
+
+//Build with VPCLMULQDQ
+WITH_VPCLMULQDQ:BOOL=ON
+
+//Test zlib-ng specific API
+ZLIBNG_ENABLE_TESTS:BOOL=ON
+
+//Give this prefix to all publicly exported symbols.
+//\nUseful when embedding into a larger library.
+//\nDefault is no prefix (empty prefix).
+ZLIB_SYMBOL_PREFIX:STRING=
+
+//Value Computed by CMake
+cpr_BINARY_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/cpr
+
+//Value Computed by CMake
+cpr_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+cpr_SOURCE_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/external/cpr
 
 //Value Computed by CMake
 uiohook_BINARY_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/external/libuiohook
@@ -275,11 +823,33 @@ uiohook_LIB_DEPENDS:STATIC=general;Advapi32;
 //Value Computed by CMake
 uiohook_SOURCE_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/external/libuiohook
 
+//Value Computed by CMake
+zlib_BINARY_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/_deps/zlib-build
+
+//Value Computed by CMake
+zlib_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+zlib_SOURCE_DIR:STATIC=D:/Documents/Coding/CPP/KeyboardWarriorLoLMod/build/_deps/zlib-src
+
 
 ########################
 # INTERNAL cache entries
 ########################
 
+BUILD_CURL_EXE:INTERNAL=OFF
+//Test CHECK_CPU_ARCHITECTURE_ARM32
+CHECK_CPU_ARCHITECTURE_ARM32:INTERNAL=
+//Test CHECK_CPU_ARCHITECTURE_ARM64
+CHECK_CPU_ARCHITECTURE_ARM64:INTERNAL=
+//Test CHECK_CPU_ARCHITECTURE_ARM64EC
+CHECK_CPU_ARCHITECTURE_ARM64EC:INTERNAL=
+//Test CHECK_CPU_ARCHITECTURE_LOONGARCH64
+CHECK_CPU_ARCHITECTURE_LOONGARCH64:INTERNAL=
+//Test CHECK_CPU_ARCHITECTURE_X64
+CHECK_CPU_ARCHITECTURE_X64:INTERNAL=1
+//Test CHECK_CPU_ARCHITECTURE_X86
+CHECK_CPU_ARCHITECTURE_X86:INTERNAL=
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
@@ -394,7 +964,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=3
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=4
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib
@@ -440,6 +1010,170 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+CPR_LIBRARIES:INTERNAL=cpr
+CURL_CA_BUNDLE:INTERNAL=auto
+CURL_CA_PATH:INTERNAL=none
+//ADVANCED property for variable: CURL_DIR
+CURL_DIR-ADVANCED:INTERNAL=1
+CURL_ENABLE_SSL:INTERNAL=OFF
+//ADVANCED property for variable: CURL_INCLUDE_DIR
+CURL_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CURL_LIBRARY_DEBUG
+CURL_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CURL_LIBRARY_RELEASE
+CURL_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+CURL_USE_LIBPSL:INTERNAL=ON
+CURL_USE_MBEDTLS:INTERNAL=OFF
+CURL_USE_OPENSSL:INTERNAL=OFF
+CURL_USE_SCHANNEL:INTERNAL=OFF
+CURL_USE_SECTRANSP:INTERNAL=OFF
+CURL_WINDOWS_SSPI:INTERNAL=OFF
+DETECT_SSL_BACKEND:INTERNAL=ON
+//Details about finding Git
+FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[C:/Program Files/Git/cmd/git.exe][v2.45.1.windows.1()]
+//ADVANCED property for variable: GIT_EXECUTABLE
+GIT_EXECUTABLE-ADVANCED:INTERNAL=1
+//Have symbol aligned_alloc
+HAVE_ALIGNED_ALLOC:INTERNAL=
+//Test HAVE_ATTRIBUTE_ALIGNED
+HAVE_ATTRIBUTE_ALIGNED:INTERNAL=
+//Test HAVE_ATTRIBUTE_VISIBILITY_HIDDEN
+HAVE_ATTRIBUTE_VISIBILITY_HIDDEN:INTERNAL=
+//Test HAVE_ATTRIBUTE_VISIBILITY_INTERNAL
+HAVE_ATTRIBUTE_VISIBILITY_INTERNAL:INTERNAL=
+//Have include audioclient.h
+HAVE_AUDIOCLIENT_H:INTERNAL=1
+//Test HAVE_AVX2_INTRIN
+HAVE_AVX2_INTRIN:INTERNAL=1
+//Test HAVE_AVX512VNNI_INTRIN
+HAVE_AVX512VNNI_INTRIN:INTERNAL=1
+//Test HAVE_AVX512_INTRIN
+HAVE_AVX512_INTRIN:INTERNAL=1
+//Test HAVE_BUILTIN_CTZ
+HAVE_BUILTIN_CTZ:INTERNAL=
+//Test HAVE_BUILTIN_CTZLL
+HAVE_BUILTIN_CTZLL:INTERNAL=
+//Have include d3d11_1.h
+HAVE_D3D11_H:INTERNAL=1
+//Test HAVE_D3D12_H
+HAVE_D3D12_H:INTERNAL=1
+//Have include d3d9.h
+HAVE_D3D_H:INTERNAL=1
+//Have include ddraw.h
+HAVE_DDRAW_H:INTERNAL=1
+//Have include dinput.h
+HAVE_DINPUT_H:INTERNAL=1
+//Have include dsound.h
+HAVE_DSOUND_H:INTERNAL=1
+//Have include dxgi.h
+HAVE_DXGI_H:INTERNAL=1
+//Have function fseeko
+HAVE_FSEEKO:INTERNAL=
+//Have include immintrin.h
+HAVE_IMMINTRIN_H:INTERNAL=1
+//Test HAVE_MASK_INTRIN
+HAVE_MASK_INTRIN:INTERNAL=1
+//Have include mmdeviceapi.h
+HAVE_MMDEVICEAPI_H:INTERNAL=1
+//Test HAVE_NO_INTERPOSITION
+HAVE_NO_INTERPOSITION:INTERNAL=
+//Result of TRY_COMPILE
+HAVE_OFF64_T:INTERNAL=FALSE
+//Test HAVE_PCLMULQDQ_INTRIN
+HAVE_PCLMULQDQ_INTRIN:INTERNAL=1
+//Have symbol posix_memalign
+HAVE_POSIX_MEMALIGN:INTERNAL=
+//Test HAVE_PTRDIFF_T
+HAVE_PTRDIFF_T:INTERNAL=1
+//Have include roapi.h
+HAVE_ROAPI_H:INTERNAL=1
+//Have include sensorsapi.h
+HAVE_SENSORSAPI_H:INTERNAL=1
+//Have include shellscalingapi.h
+HAVE_SHELLSCALINGAPI_H:INTERNAL=1
+//Test HAVE_SSE2_INTRIN
+HAVE_SSE2_INTRIN:INTERNAL=1
+//Test HAVE_SSE42CRC_INLINE_ASM
+HAVE_SSE42CRC_INLINE_ASM:INTERNAL=
+//Test HAVE_SSE42CRC_INTRIN
+HAVE_SSE42CRC_INTRIN:INTERNAL=1
+//Test HAVE_SSSE3_INTRIN
+HAVE_SSSE3_INTRIN:INTERNAL=1
+//Have include stddef.h
+HAVE_STDDEF_H:INTERNAL=1
+//Have include stdint.h
+HAVE_STDINT_H:INTERNAL=1
+//Have function strerror
+HAVE_STRERROR:INTERNAL=1
+//Have include sys/auxv.h
+HAVE_SYS_AUXV_H:INTERNAL=
+//Have include sys/sdt.h
+HAVE_SYS_SDT_H:INTERNAL=
+//Have include sys/types.h
+HAVE_SYS_TYPES_H:INTERNAL=1
+//Test HAVE_THREAD_LOCAL
+HAVE_THREAD_LOCAL:INTERNAL=1
+//Have include tpcshrd.h
+HAVE_TPCSHRD_H:INTERNAL=1
+//Have include unistd.h
+HAVE_UNISTD_H:INTERNAL=
+//Test HAVE_VPCLMULQDQ_INTRIN
+HAVE_VPCLMULQDQ_INTRIN:INTERNAL=1
+//Test HAVE_WIN32_CC
+HAVE_WIN32_CC:INTERNAL=1
+//Test HAVE_WINDOWS_GAMING_INPUT_H
+HAVE_WINDOWS_GAMING_INPUT_H:INTERNAL=1
+//Test HAVE_XINPUT_H
+HAVE_XINPUT_H:INTERNAL=1
+//Test HAVE_XSAVE_INTRIN
+HAVE_XSAVE_INTRIN:INTERNAL=1
+//Result of TRY_COMPILE
+HAVE__OFF64_T:INTERNAL=FALSE
+//Result of TRY_COMPILE
+HAVE___OFF64_T:INTERNAL=FALSE
+HTTP_ONLY:INTERNAL=ON
+//ADVANCED property for variable: INSTALL_UTILS
+INSTALL_UTILS-ADVANCED:INTERNAL=1
+//Have symbol __GLIBC__
+LIBC_IS_GLIBC:INTERNAL=
+//CHECK_TYPE_SIZE: off64_t unknown
+OFF64_T:INTERNAL=
+//ADVANCED property for variable: PKG_CONFIG_ARGN
+PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SDL_CMAKE_DEBUG_POSTFIX
+SDL_CMAKE_DEBUG_POSTFIX-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_AVX2
+WITH_AVX2-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_INFLATE_ALLOW_INVALID_DIST
+WITH_INFLATE_ALLOW_INVALID_DIST-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_INFLATE_STRICT
+WITH_INFLATE_STRICT-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_PCLMULQDQ
+WITH_PCLMULQDQ-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_REDUCED_MEM
+WITH_REDUCED_MEM-ADVANCED:INTERNAL=1
+//STRINGS property for variable: WITH_SANITIZER
+WITH_SANITIZER-STRINGS:INTERNAL=Memory;Address;Undefined;Thread
+//ADVANCED property for variable: WITH_SSE2
+WITH_SSE2-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_SSE42
+WITH_SSE42-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_SSSE3
+WITH_SSSE3-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: WITH_UNALIGNED
+WITH_UNALIGNED-ADVANCED:INTERNAL=1
+//Compile with zlib compatible API
+ZLIB_COMPAT:INTERNAL=ON
+//Build test binaries
+ZLIB_ENABLE_TESTS:INTERNAL=OFF
+//ADVANCED property for variable: ZLIB_SYMBOL_PREFIX
+ZLIB_SYMBOL_PREFIX-ADVANCED:INTERNAL=1
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/KeyboardWarriorLoLMod
+//CHECK_TYPE_SIZE: _off64_t unknown
+_OFF64_T:INTERNAL=
+//CHECK_TYPE_SIZE: __off64_t unknown
+__OFF64_T:INTERNAL=
 

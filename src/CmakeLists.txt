@@ -4,7 +4,7 @@ add_executable(KeyboardWarriorLoLMod
 )
 
 target_link_libraries(KeyboardWarriorLoLMod PRIVATE
-    SDL2
+    SDL2::SDL2
     uiohook
     opengl32
 )
@@ -21,23 +21,16 @@ target_sources(KeyboardWarriorLoLMod PRIVATE
     ../external/imgui/backends/imgui_impl_opengl3.cpp
 )
 
-# Include directories
 target_include_directories(KeyboardWarriorLoLMod PRIVATE
     ../external/imgui
     ../external/imgui/backends
-    ${SDL2_DIR}/include
 )
 
+target_link_libraries(KeyboardWarriorLoLMod PRIVATE SDL2::SDL2)
 
 # Runtime DLL copy
 add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${SDL2_DIR}/lib/x64/SDL2.dll"
-        $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>
-)
-
-add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:uiohook>
+        $<TARGET_FILE:SDL2::SDL2>
         $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>
 )
