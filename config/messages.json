@@ -1,24 +1,18 @@
 {
-    "GameStart" : [
+    "Defaults": [
         {
-            "Title": "Hello", 
-            "Message" : "Hello"
+            "Message": "I am rank 1 Yuumi player",
+            "Title": "Message"
         }
     ],
-    "GameEnd" : [
-
+    "FirstBlood": [
     ],
-    "FirstBlood" : [
-        
-    ],
-    "Kill" : [
-        
-    ], 
-    "Defaults" : [
+    "GameEnd": [],
+    "GameStart": [
         {
-            "Title": "Hello", 
-            "Message" : "Hello - default message"
-       }
-    ]
-    
+            "Message": "Hello",
+            "Title": "Hello"
+        }
+    ],
+    "Kill": []
 }

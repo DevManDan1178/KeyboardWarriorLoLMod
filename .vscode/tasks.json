@@ -6,6 +6,7 @@
             "type": "shell",
             "command": "cl",
             "args": [
+                "/std:c++20",
                 "main.cpp",
                 "HotkeyManager.cpp",
 

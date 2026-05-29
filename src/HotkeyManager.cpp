@@ -37,8 +37,7 @@ bool HotkeyManager::load() {
     
     json hotkeysData;
     file >> hotkeysData;
-    //TODO: Read from the file to assign corresponding values to messages and hotkeys vectors
-    std::cout << "Successfully retrieved hotkeys\n" << hotkeysData.dump(4) << std::endl;
+    //std::cout << "Successfully retrieved hotkeys\n" << hotkeysData.dump(4) << std::endl;
     
     //Get default keybinds
     json defaultHotkeys = hotkeysData["Defaults"];
