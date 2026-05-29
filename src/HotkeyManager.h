@@ -1,5 +1,5 @@
 #pragma once
-#include "Config.h"
+#include "Messages.h"
 
 struct Hotkey {
     int key;

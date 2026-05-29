@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 
-class Config {
+class Messages {
 public:
     bool load(const std::string& path);
 

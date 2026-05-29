@@ -1,11 +1,10 @@
-#include "Config.h"
 #include "../external/json.hpp"
 #include <fstream>
 using namespace std;
 
 using json = nlohmann::json;
 
-class Config {
+class Messages {
     bool load(const std::string& path) {
         ifstream file(path);
         if (!file.is_open()) return false;
