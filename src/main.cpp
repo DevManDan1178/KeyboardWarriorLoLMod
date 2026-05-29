@@ -72,8 +72,9 @@ int main() {
         // ImGui UI
         ImGui::Begin("Debug Panel");
 
-        Keybind kb = hotkeyManager.getKeybind();
-        ImGui::Text("Detected key code: %d", kb.keyCode);
+        //Input detection (makes app uncloseable)
+        //Keybind kb = hotkeyManager.getKeybind();
+        //ImGui::Text("Detected key code: %d", kb.keyCode);
 
         if (ImGui::Button("Test Button")) {
             std::cout << "Button clicked!" << std::endl;
