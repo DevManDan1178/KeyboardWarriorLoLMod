@@ -1,16 +1,33 @@
 {
     "Defaults": [
         {
-            "Message": "I am rank 1 Yuumi player",
+            "Message": "I am rank 1 Yuumi player. Don't mess with me.",
             "Title": "Message"
+        },
+        {
+            "Message": "I am rank 1 Yuumi player. So don't mess with me. I am pro. Real Pro. Ok? Don't even joke lad. I am the best. You have no chance against me!",
+            "Title": "Yuumi GOAT"
+        },
+        {
+            "Message": "This the longest message. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB",
+            "Title": "True Message"
         }
     ],
     "FirstBlood": [
+        {
+            "Message": "I am rank 1 Yuumi player",
+            "Title": "True Message"
+        }
     ],
-    "GameEnd": [],
+    "GameEnd": [
+        {
+            "Message": "I am rank 1 Yuumi player",
+            "Title": "First Blood 1"
+        }
+    ],
     "GameStart": [
         {
-            "Message": "Hello",
+            "Message": "I am rank 1 Yuumi player",
             "Title": "Hello"
         }
     ],

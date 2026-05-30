@@ -2,6 +2,7 @@ add_executable(KeyboardWarriorLoLMod
     main.cpp
     HotkeyManager.cpp
     Messages.cpp
+    ui/MessagesUI.cpp
 )
 
 target_link_libraries(KeyboardWarriorLoLMod PRIVATE
@@ -23,6 +24,8 @@ target_sources(KeyboardWarriorLoLMod PRIVATE
 )
 
 target_include_directories(KeyboardWarriorLoLMod PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/ui
     ../external/imgui
     ../external/imgui/backends
 )

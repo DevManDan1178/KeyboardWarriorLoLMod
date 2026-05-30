@@ -15,8 +15,8 @@ struct Message {
 
 
 struct MessageBuffer {
-    char content[512]{};
-    char title[64]{};
+    char content[256]{}; //Capped at 255 characters per message, + 1 for null terminator 
+    char title[32]{};
 };
 
 class Messages {

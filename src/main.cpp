@@ -1,15 +1,20 @@
 #include "Messages.h"
 #include "HotkeyManager.h"
 
+#include "ui/MessagesUI.h"
+
+#include <windows.h>
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_opengl.h>
+#include <SDL_syswm.h>
 #include <uiohook.h>
 #include <iostream>
 #include <bitset>
 #include <map>
 #include <string>
 #include <format>
+
 //ImGui
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -35,7 +40,7 @@ int main() {
         SDL_WINDOWPOS_CENTERED,
         800,
         600,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
+        SDL_WINDOW_OPENGL
     );
 
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
@@ -57,7 +62,7 @@ int main() {
         return 0;
     }
     HotkeyManager hotkeyManager(messages);
-    std::cout << "loading hotkeys" << std::endl;
+    
     success = hotkeyManager.load();
     if (!success) {
         return 0;
@@ -66,7 +71,7 @@ int main() {
     bool running = true;
     bool windowHidden = false;
     
-    std::map<std::string, std::vector<Message>> &messagesMap = messages.messages;
+    
     // While the application is running
     int categoryToggleStates = 0; //Bitmask for the toggle of every category
 
@@ -86,65 +91,20 @@ int main() {
         ImGui::NewFrame();
         
         // ImGui UI
-        ImGui::Begin("Panel");
-        {
-            int idx = -1;
-            for (const auto& pair : messagesMap) {
-                idx++;
-                std::string category = pair.first;
-                bool toggled = categoryToggleStates & (1 << idx);
+        ImGui::SetNextWindowBgAlpha(0.0f);
+        ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.5f, .5f, toggled ? 1.0f : .5f, 1.0f));
-                if (ImGui::Button(category.c_str())) {
-                    categoryToggleStates ^= (1 << idx);
-                }
-                ImGui::PopStyleColor();
-                
-                if (!toggled) {
-                    continue;
-                }
-                std::vector<Message> messageList = pair.second;
-                ImGui::BeginGroup();
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(.95f, .95f, .95f, 1.0f));
-                
-                static std::vector<MessageBuffer> messageBuffers; 
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
 
-                if (messageBuffers.size() != messageList.size()) {
-                    messageBuffers.resize(messageList.size());
-
-
-                    for (size_t i = 0; i < messageList.size(); i++) {
-                        MessageBuffer& messageBuffer = messageBuffers[i];
-                        strncpy_s(messageBuffer.title, messageList[i].messageTitle.c_str(), sizeof(messageBuffer.title));
-                        strncpy_s(messageBuffer.content, messageList[i].messageContent.c_str(), sizeof(messageBuffer.content));
-                    }
-                }
-
-                for (int i = 0; i < messageList.size(); i++) {
-                    ImGui::BeginGroup();
-                    MessageBuffer& messageBuffer = messageBuffers[i];
-                    if (ImGui::InputText(std::format("[Title (Message {})]##{}/{}", i + 1, idx, i).c_str(), messageBuffer.title, IM_ARRAYSIZE(messageBuffer.title), ImGuiInputTextFlags_EnterReturnsTrue)) {
-                        messages.setMessageTitle(category, i, messageBuffer.title);
-                    }
-
-                    if (ImGui::InputText(std::format("[Message]##{}/{}", idx, i).c_str(), messageBuffer.content,IM_ARRAYSIZE(messageBuffer.content), ImGuiInputTextFlags_EnterReturnsTrue)){
-                        messages.setMessageContent(category, i, messageBuffer.content);
-                    }
-
-                    if (ImGui::Button(std::format("Delete Message {}##{}/{}", i + 1, idx, i).c_str())) {
-                        messages.deleteMessage(category, i);
-                    }
-
-                    ImGui::EndGroup();
-                }
-                if (ImGui::Button(std::format("Create New Message##{}", idx).c_str())) {
-                    messages.createNewMessage(category, Message("I am rank 1 Yuumi player", "True Message"));
-                }
-                ImGui::PopStyleColor();
-                ImGui::EndGroup();
-            }
-        }
-        
+        ImGui::Begin(
+            "Overlay",
+            nullptr,
+            ImGuiWindowFlags_NoDecoration |
+            ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_AlwaysVerticalScrollbar
+        );
+        MessagesUI::MessagesMenu(messages);
 
         //Input detection (makes app uncloseable)
         //Keybind kb = hotkeyManager.getKeybind();
@@ -157,7 +117,8 @@ int main() {
         // Rendering
         ImGui::Render();
         glViewport(0, 0, 800, 600);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+        glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

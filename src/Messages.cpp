@@ -67,6 +67,10 @@ bool Messages::setMessageContent(std::string category, int index, std::string co
         std::cout << "attempt to set non existing message under category " << category << " and index " << index << std::endl;
         return false;
     }
+    std::string prev = Messages::messages[category][index].messageContent;
+    if (content == prev) {
+        return true;
+    }
     Messages::messages[category][index].messageContent = content;
     Messages::attemptWriteToJSON();
     return true;
@@ -76,6 +80,10 @@ bool Messages::setMessageTitle(std::string category, int index, std::string titl
     if (!(Messages::messages.contains(category) &&  index < Messages::messages[category].size())) {
         std::cout << "attempt to set non existing message under category " << category << " and index " << index << std::endl;
         return false;
+    }
+    std::string prev = Messages::messages[category][index].messageTitle;
+    if (title == prev) {
+        return true;
     }
     Messages::messages[category][index].messageTitle = title;
     Messages::attemptWriteToJSON();
