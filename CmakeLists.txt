@@ -4,6 +4,7 @@ project(KeyboardWarriorLoLMod)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(FetchContent)
 
 # SDL
 #set(SDL2_DIR "C:/SDL2-2.32.4")
@@ -16,7 +17,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #)
 
 # Dependencies
+
 add_subdirectory(external/SDL)
 add_subdirectory(external/libuiohook)
 add_subdirectory(src)
+
 

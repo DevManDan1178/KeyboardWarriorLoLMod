@@ -1,8 +1,10 @@
 add_executable(KeyboardWarriorLoLMod
     main.cpp
+    LoLReader.cpp
     HotkeyManager.cpp
     Messages.cpp
     ui/MessagesUI.cpp
+    helpers/HTTPHelper.cpp
 )
 
 target_link_libraries(KeyboardWarriorLoLMod PRIVATE
@@ -10,7 +12,6 @@ target_link_libraries(KeyboardWarriorLoLMod PRIVATE
     uiohook
     opengl32
 )
-
 
 # ImGui source files
 target_sources(KeyboardWarriorLoLMod PRIVATE
@@ -26,11 +27,11 @@ target_sources(KeyboardWarriorLoLMod PRIVATE
 target_include_directories(KeyboardWarriorLoLMod PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/helpers
     ../external/imgui
     ../external/imgui/backends
+    ../external/httplib
 )
-
-target_link_libraries(KeyboardWarriorLoLMod PRIVATE SDL2::SDL2)
 
 # Runtime DLL copy
 add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD

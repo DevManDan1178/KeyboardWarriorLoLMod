@@ -31,5 +31,29 @@
             "Title": "Hello"
         }
     ],
-    "Kill": []
+
+    "DragonKill": [
+
+    ],
+    "HeraldKill": [
+        
+    ],
+    "BaronKill": [
+        
+    ],
+    "TurretKilled": [
+        
+    ],
+    "InhibKilled": [
+        
+    ],
+    "Ace": [
+        
+    ],
+    "ChampionKill": [
+        
+    ],
+    "Multikill": [
+        
+    ]
 }

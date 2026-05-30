@@ -2,6 +2,7 @@
 #include "HotkeyManager.h"
 
 #include "ui/MessagesUI.h"
+#include "LoLReader.h"
 
 #include <windows.h>
 #define SDL_MAIN_HANDLED
@@ -20,6 +21,7 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 
+//Can divide the categories of events into [kills], [objectives], [game state]
 
 int main() {
     // Initialize SDL
@@ -40,8 +42,12 @@ int main() {
         SDL_WINDOWPOS_CENTERED,
         800,
         600,
-        SDL_WINDOW_OPENGL
+        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
     );
+    int display_w, display_h;
+    SDL_GL_GetDrawableSize(window, &display_w, &display_h);
+
+    glViewport(0, 0, display_w, display_h);
 
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
@@ -74,6 +80,9 @@ int main() {
     
     // While the application is running
     int categoryToggleStates = 0; //Bitmask for the toggle of every category
+
+    LoLReader lolReader = LoLReader();
+    lolReader.start();
 
     while (running) {
         SDL_Event event;
@@ -128,7 +137,6 @@ int main() {
     int w, h;
     SDL_GetWindowSize(window, &w, &h);
 
-    std::cout << "Window size: " << w << "x" << h << std::endl;
     // Cleanup / Shutdown
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
@@ -137,6 +145,6 @@ int main() {
     SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();
-
+    lolReader.stop();
     return 0;
 }
