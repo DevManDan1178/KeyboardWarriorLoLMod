@@ -57,7 +57,6 @@ bool Messages::load() {
         std::vector<std::string> keyOrder; 
         for (int i = 0; i < eventsKeyOrder[category].size(); i++) {
             std::string key = eventsKeyOrder[category][i];
-            std::cout << key << std::endl;
             keyOrder.push_back(key);
         }
         eventKeyOrders[category] = keyOrder;
@@ -76,14 +75,13 @@ bool Messages::writeToJSON()
     }
 
     // Events
-    for (const auto& [category, eventMessages] : eventMessages)
+    for (const auto& [category, categoryEventMessages] : eventMessages)
     {
-        std::vector<std::string> eventKeyOrder = eventKeyOrders[category];
-        for (int i = 0; i < eventKeyOrders.size(); i++) {
-            std::string eventKey = eventKeyOrder[i];
+        for (const auto& [eventKey, messages] : categoryEventMessages) {
+            std::cout << eventKey << std::endl;
             messagesData["Events"][category][eventKey] = json::array();
             
-            std::vector<Message> messages = eventMessages.at(eventKey);
+            std::vector<Message> messages = categoryEventMessages.at(eventKey);
             for (const auto& message : messages)
             {
                 messagesData["Events"][category][eventKey].push_back(
@@ -91,7 +89,12 @@ bool Messages::writeToJSON()
                 );
             }
         }
-
+    }
+    for (const auto& [category, keyOrder] : eventKeyOrders) {
+        messagesData["EventsKeyOrder"][category] = json::array();
+        for (int i = 0; i < keyOrder.size(); i++) {
+            messagesData["EventsKeyOrder"][category].push_back(keyOrder[i]);
+        }
     }
 
     std::ofstream file(path);
@@ -110,7 +113,6 @@ bool Messages::writeToJSON()
                   << path << std::endl;
         return false;
     }
-
     return true;
 }
 
@@ -169,6 +171,39 @@ bool Messages::deleteEventMessage(std::string category, std::string event, int i
         return false;
     }
     eventMessages[category][event].erase(eventMessages[category][event].begin() + index);
+    attemptWriteToJSON();
+    return true;
+}
+
+ bool Messages::setDefaultMessageContent(int index, std::string content) {
+    if (index >= defaultMessages.size()) {
+        std::cout << "Attempt to modify non existing default message at index " << index << std::endl;
+        return false;
+    }
+    defaultMessages[index].messageContent = content;
+    attemptWriteToJSON();
+    return true;
+ }
+bool Messages::setDefaultMessageTitle(int index, std::string title) {
+    if (index >= defaultMessages.size()) {
+        std::cout << "Attempt to modify non existing default message at index " << index << std::endl;
+        return false;
+    }
+    defaultMessages[index].messageTitle = title;
+    attemptWriteToJSON();
+    return true;
+}
+bool Messages::createNewDefaultMessage(Message message) {
+    defaultMessages.push_back(message);
+    attemptWriteToJSON();
+    return true;
+}
+bool Messages::deleteDefaultMessage(int index) {
+    if (index >= defaultMessages.size()) {
+        std::cout << "Attempt to delete non existing default message at index " << index << std::endl;
+        return false;
+    }
+    defaultMessages.erase(defaultMessages.begin() + index);
     attemptWriteToJSON();
     return true;
 }

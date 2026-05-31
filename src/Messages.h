@@ -31,7 +31,10 @@ class Messages {
         bool createNewEventMessage(std::string category, std::string event, Message message);
         bool deleteEventMessage(std::string category, std::string event, int index);
 
-
+        bool setDefaultMessageContent(int index, std::string content);
+        bool setDefaultMessageTitle(int index, std::string title);
+        bool createNewDefaultMessage(Message message);
+        bool deleteDefaultMessage(int index);
     private:
         bool writeToJSON();
         void attemptWriteToJSON();

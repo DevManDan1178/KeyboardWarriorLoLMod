@@ -1,22 +1,21 @@
 {
-    "Events" : [
+    "Defaults": [
         {
-            "Key" : 50,
-            "BindType" : "Keyboard",
-            "Modifiers" : 0
+            "BindType": "Mouse",
+            "Key": 5,
+            "Modifiers": 0
         }
     ],
-    "SkipEvent" : {
-        "key": 12,
-        "BindType" : "Keyboard",
-        "Modifiers": 0
-    },
-    "Defaults" : [ 
+    "Events": [
         {
-            "Key" : 52,
-            "BindType" : "Keyboard",
-            "Modifiers" : 0
-        }  
+            "BindType": "Mouse",
+            "Key": 4,
+            "Modifiers": 0
+        },
+        {
+            "BindType": "None",
+            "Key": 0,
+            "Modifiers": 0
+        }
     ]
-    
 }

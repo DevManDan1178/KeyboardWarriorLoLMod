@@ -2,6 +2,7 @@
 #include "HotkeyManager.h"
 
 #include "ui/MessagesUI.h"
+#include "ui/HotkeysUI.h"
 #include "LoLReader.h"
 
 #include <windows.h>
@@ -113,8 +114,9 @@ int main() {
             ImGuiWindowFlags_NoMove |
             ImGuiWindowFlags_AlwaysVerticalScrollbar
         );
-        MessagesUI::MessagesMenu(messages);
-
+        MessagesUI::messagesMenu(messages);
+        ImGui::Dummy(ImVec2(0, 12));
+        HotkeysUI::hotkeysUI(hotkeyManager);
         //Input detection (makes app uncloseable)
         //Keybind kb = hotkeyManager.getKeybind();
         //ImGui::Text("Detected key code: %d", kb.keyCode);

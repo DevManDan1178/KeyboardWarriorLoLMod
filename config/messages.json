@@ -1,32 +1,12 @@
 {
     "Defaults": [
         {
-            "Content": "",
-            "Title": "Message"
-        },
-        {
-            "Content": "",
-            "Title": "Yuumi GOAT"
-        },
-        {
-            "Content": "",
+            "Content": "I am rank 1 Yuumi player",
             "Title": "True Message"
         }
     ],
-    "EventsKeyOrder": {
-        "GameState" : ["GameStart", "GameEnd"],
-        "Kill" :["FirstBlood", "Ace", "DoubleKill", "TripleKill", "QuadraKill", "PentaKill"],
-        "Objectives": ["Dragon", "Baron", "RiftHerald", "VoidGrubs"],
-        "Structures": ["Turret", "Inhibitor"]
-    },
     "Events": {
         "GameState": {
-            "GameStart": [
-                {
-                    "Content": "",
-                    "Title": "Hello"
-                }
-            ],
             "GameEnd": [
                 {
                     "Content": "",
@@ -36,47 +16,70 @@
                     "Content": "",
                     "Title": "yes"
                 }
+            ],
+            "GameStart": [
+                {
+                    "Content": "",
+                    "Title": "Hello"
+                }
             ]
         },
         "Kill": {
+            "Ace": [
+                {
+                    "Content": "",
+                    "Title": "True Message"
+                }
+            ],
+            "DoubleKill": [],
             "FirstBlood": [
                 {
                     "Content": "",
                     "Title": "True Message"
                 }
             ],
-            "Ace": [
-                {
-                    "Content": "I am rank 1 Yuumi player",
-                    "Title": "True Message"
-                }
-            ],
-            "DoubleKill": [
-
-            ],
-            "TripleKill": [
-
-            ],
-            "QuadraKill": [
-
-            ],
             "PentaKill": [
                 {
                     "Content": "",
                     "Title": "True Message"
                 }
-            ]
-               
+            ],
+            "QuadraKill": [],
+            "TripleKill": []
         },
         "Objectives": {
-            "Dragon": [],
             "Baron": [],
+            "Dragon": [],
             "Herald": [],
             "VoidGrubs": []
         },
         "Structures": {
-            "Turret": [],
-            "Inhibitor": []
+            "Inhibitor": [],
+            "Turret": []
         }
+    },
+    "EventsKeyOrder": {
+        "GameState": [
+            "GameStart",
+            "GameEnd"
+        ],
+        "Kill": [
+            "FirstBlood",
+            "Ace",
+            "DoubleKill",
+            "TripleKill",
+            "QuadraKill",
+            "PentaKill"
+        ],
+        "Objectives": [
+            "Dragon",
+            "Baron",
+            "Herald",
+            "VoidGrubs"
+        ],
+        "Structures": [
+            "Turret",
+            "Inhibitor"
+        ]
     }
 }

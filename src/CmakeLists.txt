@@ -4,6 +4,7 @@ add_executable(KeyboardWarriorLoLMod
     HotkeyManager.cpp
     Messages.cpp
     ui/MessagesUI.cpp
+    ui/HotkeysUI.cpp
     helpers/HTTPHelper.cpp
 )
 

@@ -4,5 +4,5 @@
 
 namespace MessagesUI {
     extern int categoryToggleStates;
-    void MessagesMenu(Messages &messages);
+    void messagesMenu(Messages &messages);
 }
