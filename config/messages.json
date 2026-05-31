@@ -16,7 +16,7 @@
     "EventsKeyOrder": {
         "GameState" : ["GameStart", "GameEnd"],
         "Kill" :["FirstBlood", "Ace", "DoubleKill", "TripleKill", "QuadraKill", "PentaKill"],
-        "Objectives": ["Dragon", "Baron", "RiftHerald", "VoidGrubs"],
+        "Objectives": ["Dragon", "Baron", "Herald", "VoidGrubs"],
         "Structures": ["Turret", "Inhibitor"]
     },
     "Events": {
