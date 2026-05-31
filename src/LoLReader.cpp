@@ -27,8 +27,30 @@ void LoLReader::stop(){
     }
 }
 void LoLReader::processNewEvents(){
+    std::queue<json> localQueue;
 
+    {
+        std::lock_guard<std::mutex> lock(eventMutex);
+        std::swap(localQueue, eventQueue);
+    }
+
+    while (!localQueue.empty())
+    {
+        const json& event = localQueue.front();
+
+        // Handle the event
+        std::cout << "Processing event:\n" << event.dump(4) << std::endl;
+
+        // Example:
+        // if (event["EventName"] == "ChampionKill")
+        // {
+        //     ...
+        // }
+ 
+        localQueue.pop();
+    }
 }
+
 
 void LoLReader::liveClientEventLoop()
 {

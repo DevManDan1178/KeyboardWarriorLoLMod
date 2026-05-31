@@ -8,6 +8,17 @@ using json = nlohmann::json;
 
 const std::filesystem::path path = std::filesystem::current_path() / "config/messages.json";
 
+static Message parseMessageData(json messageData) {
+    return Message(messageData.value("Message", ""), messageData.value("Title", ""));
+}
+
+static json messageToJSON(Message message) {
+    json msgJSON;
+    msgJSON["Content"] = message.messageContent;
+    msgJSON["Title"] = message.messageTitle;
+    return msgJSON;
+}
+
 bool Messages::load() {
     std::ifstream file(path);
     if (!file.is_open()) {
@@ -15,104 +26,149 @@ bool Messages::load() {
         return false;
     }
     
-    json data;
-    file >> data;
+    json messagesData;
+    file >> messagesData;
     //std::cout << "Successfully retrieved messages\n" << data.dump(4) << std::endl;
     
-    for (auto& [category, messages] : data.items()) {
-        
-        if (!messages.is_array()) {
-            std::cout << "Skipping non-array category in messages.json: " << category << std::endl;
-            continue;
-        }
+    json defaultMessages = messagesData["Defaults"];
+    for (int i = 0; i < defaultMessages.size(); i++) {
+        Messages::defaultMessages.push_back(parseMessageData(defaultMessages[i]));
+    }
+    
 
-        std::vector<Message> messageList;
-        for (auto& messageInfo : messages) {
-            messageList.push_back(Message(messageInfo.value("Message", ""), messageInfo.value("Title", "")));
-            //std::cout << "Message with title: " << msg.messageTitle << " and str: " << msg.messageContent << std::endl;
+    json eventMessages = messagesData["Events"];
+    json eventsKeyOrder = messagesData["EventsKeyOrder"];
+    for (auto& [category, categoryMessages] : eventMessages.items()) {
+        std::unordered_map<std::string, std::vector<Message>> messagesMap;
+        
+        for (auto& [event, messages] : categoryMessages.items()) {
+            if (!messages.is_array()) {
+                continue;
+            }
+
+            std::vector<Message> messageList;
+            for (auto& messageInfo : messages) {
+                messageList.push_back(parseMessageData(messageInfo));
+            }
+            messagesMap[event] = messageList;
         }
-        Messages::messages[category] = messageList;
+        Messages::eventMessages[category] = messagesMap;
+        
+        std::vector<std::string> keyOrder; 
+        for (int i = 0; i < eventsKeyOrder[category].size(); i++) {
+            std::string key = eventsKeyOrder[category][i];
+            std::cout << key << std::endl;
+            keyOrder.push_back(key);
+        }
+        eventKeyOrders[category] = keyOrder;
     }
     return true;
 }
+bool Messages::writeToJSON()
+{
+    json messagesData;
 
-bool Messages::writeToJSON() {
-    json data;
-    for (const auto& [category, messageList] : messages) {
-        json array = json::array();
+    // Defaults
+    messagesData["Defaults"] = json::array();
+    for (const auto& message : defaultMessages)
+    {
+        messagesData["Defaults"].push_back(messageToJSON(message));
+    }
 
-        for (const auto& msg : messageList) {
-            json obj;
-            obj["Title"] = msg.messageTitle;
-            obj["Message"] = msg.messageContent;
-
-            array.push_back(obj);
+    // Events
+    for (const auto& [category, eventMessages] : eventMessages)
+    {
+        std::vector<std::string> eventKeyOrder = eventKeyOrders[category];
+        for (int i = 0; i < eventKeyOrders.size(); i++) {
+            std::string eventKey = eventKeyOrder[i];
+            messagesData["Events"][category][eventKey] = json::array();
+            
+            std::vector<Message> messages = eventMessages.at(eventKey);
+            for (const auto& message : messages)
+            {
+                messagesData["Events"][category][eventKey].push_back(
+                    messageToJSON(message)
+                );
+            }
         }
 
-        data[category] = array;
     }
 
     std::ofstream file(path);
-    if (!file.is_open()) {
-        std::cout << "Failed to open file for writing: " << path << std::endl;
+    if (!file.is_open())
+    {
+        std::cout << "Failed to open file for writing at path "
+                  << path << std::endl;
         return false;
     }
 
-    file << data.dump(4); 
+    file << messagesData.dump(4); // pretty-print with 4-space indentation
+
+    if (file.fail())
+    {
+        std::cout << "Failed while writing JSON to "
+                  << path << std::endl;
+        return false;
+    }
+
     return true;
 }
 
-bool Messages::setMessageContent(std::string category, int index, std::string content) {
-    if (!(Messages::messages.contains(category) && index < Messages::messages[category].size())) {
+bool Messages::checkValidEventMessage(std::string category, std::string event, int index) {
+    return eventMessages.contains(category) && eventMessages[category].contains(event) && index < eventMessages[category][event].size();
+}
+
+bool Messages::setEventMessageContent(std::string category, std::string event, int index, std::string content) {
+    if (!checkValidEventMessage(category, event, index)) {
         std::cout << "attempt to set non existing message under category " << category << " and index " << index << std::endl;
         return false;
     }
-    std::string prev = Messages::messages[category][index].messageContent;
+    std::string prev = eventMessages[category][event][index].messageContent;
     if (content == prev) {
         return true;
     }
-    Messages::messages[category][index].messageContent = content;
-    Messages::attemptWriteToJSON();
+    eventMessages[category][event][index].messageContent = content;
+    attemptWriteToJSON();
     return true;
 }
 
-bool Messages::setMessageTitle(std::string category, int index, std::string title) {
-    if (!(Messages::messages.contains(category) &&  index < Messages::messages[category].size())) {
+bool Messages::setEventMessageTitle(std::string category, std::string event, int index, std::string title) {
+    if  (!checkValidEventMessage(category, event, index))  {
         std::cout << "attempt to set non existing message under category " << category << " and index " << index << std::endl;
         return false;
     }
-    std::string prev = Messages::messages[category][index].messageTitle;
+    std::string prev = eventMessages[category][event][index].messageTitle;
     if (title == prev) {
         return true;
     }
-    Messages::messages[category][index].messageTitle = title;
-    Messages::attemptWriteToJSON();
+    eventMessages[category][event][index].messageTitle = title;
+    attemptWriteToJSON();
     return true;
 }
 
 void Messages::attemptWriteToJSON() {
-    bool success = Messages::writeToJSON();
+    bool success = writeToJSON();
     if (!success) {
         std::cout << "unable to write messages to JSON" << std::endl;
     }
 }
 
-bool Messages::createNewMessage(std::string category, Message message) {
-    if (!Messages::messages.contains(category)) {
+bool Messages::createNewEventMessage(std::string category, std::string event, Message message) {
+    if (!(eventMessages.contains(category) && eventMessages[category].contains(event))) {
         std::cout << "attempt to create message under non existing category " << category << std::endl;
         return false;
     }
-    Messages::messages[category].push_back(message);
-    Messages::attemptWriteToJSON();
+    eventMessages[category][event].push_back(message);
+    attemptWriteToJSON();
     return true;
 }
 
-bool Messages::deleteMessage(std::string category, int index) {
-     if (!(Messages::messages.contains(category) && index < Messages::messages[category].size())) {
+bool Messages::deleteEventMessage(std::string category, std::string event, int index) {
+     if (!checkValidEventMessage(category, event, index)) {
         std::cout << "attempt to delete non existing message under category " << category << " and index " << index << std::endl;
         return false;
     }
-    Messages::messages[category].erase(Messages::messages[category].begin() + index);
-    Messages::attemptWriteToJSON();
+    eventMessages[category][event].erase(eventMessages[category][event].begin() + index);
+    attemptWriteToJSON();
     return true;
 }

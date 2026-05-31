@@ -6,6 +6,11 @@
             "Modifiers" : 0
         }
     ],
+    "SkipEvent" : {
+        "key": 12,
+        "BindType" : "Keyboard",
+        "Modifiers": 0
+    },
     "Defaults" : [ 
         {
             "Key" : 52,

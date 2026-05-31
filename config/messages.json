@@ -1,59 +1,82 @@
 {
     "Defaults": [
         {
-            "Message": "I am rank 1 Yuumi player. Don't mess with me.",
+            "Content": "",
             "Title": "Message"
         },
         {
-            "Message": "I am rank 1 Yuumi player. So don't mess with me. I am pro. Real Pro. Ok? Don't even joke lad. I am the best. You have no chance against me!",
+            "Content": "",
             "Title": "Yuumi GOAT"
         },
         {
-            "Message": "This the longest message. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB",
+            "Content": "",
             "Title": "True Message"
         }
     ],
-    "FirstBlood": [
-        {
-            "Message": "I am rank 1 Yuumi player",
-            "Title": "True Message"
-        }
-    ],
-    "GameEnd": [
-        {
-            "Message": "I am rank 1 Yuumi player",
-            "Title": "First Blood 1"
-        }
-    ],
-    "GameStart": [
-        {
-            "Message": "I am rank 1 Yuumi player",
-            "Title": "Hello"
-        }
-    ],
+    "EventsKeyOrder": {
+        "GameState" : ["GameStart", "GameEnd"],
+        "Kill" :["FirstBlood", "Ace", "DoubleKill", "TripleKill", "QuadraKill", "PentaKill"],
+        "Objectives": ["Dragon", "Baron", "RiftHerald", "VoidGrubs"],
+        "Structures": ["Turret", "Inhibitor"]
+    },
+    "Events": {
+        "GameState": {
+            "GameStart": [
+                {
+                    "Content": "",
+                    "Title": "Hello"
+                }
+            ],
+            "GameEnd": [
+                {
+                    "Content": "",
+                    "Title": "Title"
+                },
+                {
+                    "Content": "",
+                    "Title": "yes"
+                }
+            ]
+        },
+        "Kill": {
+            "FirstBlood": [
+                {
+                    "Content": "",
+                    "Title": "True Message"
+                }
+            ],
+            "Ace": [
+                {
+                    "Content": "I am rank 1 Yuumi player",
+                    "Title": "True Message"
+                }
+            ],
+            "DoubleKill": [
 
-    "DragonKill": [
+            ],
+            "TripleKill": [
 
-    ],
-    "HeraldKill": [
-        
-    ],
-    "BaronKill": [
-        
-    ],
-    "TurretKilled": [
-        
-    ],
-    "InhibKilled": [
-        
-    ],
-    "Ace": [
-        
-    ],
-    "ChampionKill": [
-        
-    ],
-    "Multikill": [
-        
-    ]
+            ],
+            "QuadraKill": [
+
+            ],
+            "PentaKill": [
+                {
+                    "Content": "",
+                    "Title": "True Message"
+                }
+            ]
+               
+        },
+        "Objectives": {
+            "Dragon": [],
+            "Baron": [],
+            "Herald": [],
+            "VoidGrubs": []
+        },
+        "Structures": {
+            "Turret": [],
+            "Inhibitor": []
+        }
+    }
 }

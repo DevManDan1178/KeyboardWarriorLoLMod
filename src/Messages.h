@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 struct Message {
@@ -22,15 +22,18 @@ struct MessageBuffer {
 class Messages {
     public:
         bool load();
-        std::map<std::string, std::vector<Message>> messages;
+        std::vector<Message> defaultMessages;
+        std::unordered_map<std::string, std::unordered_map<std::string, std::vector<Message>>> eventMessages;
+        std::unordered_map<std::string, std::vector<std::string>> eventKeyOrders;
 
-        bool setMessageContent(std::string category, int index, std::string content);
-        bool setMessageTitle(std::string category, int index, std::string title);
-        bool createNewMessage(std::string category, Message message);
-        bool deleteMessage(std::string category, int index);
+        bool setEventMessageContent(std::string category, std::string event, int index, std::string content);
+        bool setEventMessageTitle(std::string category, std::string event, int index, std::string title);
+        bool createNewEventMessage(std::string category, std::string event, Message message);
+        bool deleteEventMessage(std::string category, std::string event, int index);
 
 
     private:
         bool writeToJSON();
         void attemptWriteToJSON();
+        bool checkValidEventMessage(std::string category, std::string event, int index);
 };
