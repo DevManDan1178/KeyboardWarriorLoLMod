@@ -6,16 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
-# SDL
-#set(SDL2_DIR "C:/SDL2-2.32.4")
-
-#add_library(SDL2 SHARED IMPORTED)
-#set_target_properties(SDL2 PROPERTIES
-#    IMPORTED_LOCATION "${SDL2_DIR}/lib/x64/SDL2.dll"
-#    IMPORTED_IMPLIB   "${SDL2_DIR}/lib/x64/SDL2.lib"
-#    INTERFACE_INCLUDE_DIRECTORIES "${SDL2_DIR}/include"
-#)
-
 # Dependencies
 
 add_subdirectory(external/SDL)
