@@ -50,8 +50,7 @@ bool HotkeyManager::load() {
     
     json hotkeysData;
     file >> hotkeysData;
-    //std::cout << "Successfully retrieved hotkeys\n" << hotkeysData.dump(4) << std::endl;
-    
+ 
     //Get default keybinds
     json defaultHotkeys = hotkeysData["Defaults"];
     for (int i = 0; i < defaultHotkeys.size(); i++) {
@@ -66,6 +65,8 @@ bool HotkeyManager::load() {
         HotkeyManager::eventHotkeys.push_back(hotkey);
     }
     
+    Hotkey skipEventHotkey = parseHotkeyData(hotkeysData["SkipEvent"]);
+    HotkeyManager::skipEventHotkey = skipEventHotkey;
     return true;
 }
 
@@ -92,6 +93,8 @@ bool HotkeyManager::writeToJSON() {
             hotkeysData["Events"].push_back(hotkeyToJson(hotkey));
         }
 
+        hotkeysData["SkipEvent"] = hotkeyToJson(skipEventHotkey);
+
         std::ofstream file(path);
         if (!file.is_open()) {
             std::cout << "Failed to open file for writing: " << path << std::endl;
@@ -107,10 +110,13 @@ bool HotkeyManager::writeToJSON() {
     }
 }
 
+static bool checkHotkeysEqual(Hotkey hotkey, Hotkey otherHotkey) {
+    return hotkey.bindType == otherHotkey.bindType && hotkey.keyCode == otherHotkey.keyCode && hotkey.modifiers == otherHotkey.modifiers;
+}
+
 bool HotkeyManager::checkHotkeyIsInList(Hotkey hotkey, const std::vector<Hotkey> hotkeyList, int exceptForIndex) {
     for (int i = 0; i < hotkeyList.size(); i++) {
-        Hotkey otherHotkey = hotkeyList[i];
-        if (i != exceptForIndex && hotkey.bindType == otherHotkey.bindType && hotkey.keyCode == otherHotkey.keyCode && hotkey.modifiers == otherHotkey.modifiers) {
+        if (i != exceptForIndex && checkHotkeysEqual(hotkey, hotkeyList[i])) {
             return true;
         }
     }
@@ -123,7 +129,7 @@ bool HotkeyManager::setHotkey(Hotkey hotkey, bool isEventHotkey, int index) {
         std::cout << "Attempt to set non existent hotkey for " << (isEventHotkey ? "events" : "defaults") << " at index " << index << std::endl;
         return false;
     }
-    if (checkHotkeyIsInList(hotkey, hotkeyList, index) || checkHotkeyIsInList(hotkey, isEventHotkey ? defaultHotkeys : eventHotkeys)) {
+    if (checkHotkeyIsInList(hotkey, hotkeyList, index) || checkHotkeyIsInList(hotkey, isEventHotkey ? defaultHotkeys : eventHotkeys) || checkHotkeysEqual(hotkey, skipEventHotkey)) {
         std::cout << "Attempt to set an already existing hotkey" << std::endl;
         return false;
     }
@@ -134,7 +140,7 @@ bool HotkeyManager::setHotkey(Hotkey hotkey, bool isEventHotkey, int index) {
 
 bool HotkeyManager::addHotkey(Hotkey hotkey, bool isEventHotkey) {
     std::vector<Hotkey> &hotkeyList = isEventHotkey ? eventHotkeys : defaultHotkeys;
-    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys)) {
+    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys) || checkHotkeysEqual(hotkey, skipEventHotkey)) {
         std::cout << "Attempt to set an already existing hotkey" << std::endl;
         return false;
     }
@@ -150,6 +156,16 @@ bool HotkeyManager::removeHotkey(bool isEventHotkey, int index) {
         return false;
     }
     hotkeyList.erase(hotkeyList.begin() + index);
+    attemptWriteToJSON();
+    return true;
+}
+
+bool HotkeyManager::setSkipEventHotkey(Hotkey hotkey) {
+    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys)) {
+        std::cout << "Attempt to set an already existing hotkey to SkipEvent" << std::endl;
+        return false;
+    }
+    skipEventHotkey = hotkey;
     attemptWriteToJSON();
     return true;
 }
@@ -191,9 +207,18 @@ Hotkey HotkeyManager::queryHotkey()
 
             // Handle mouse
             if (event.type == SDL_MOUSEBUTTONDOWN)
+           if (event.type == SDL_MOUSEBUTTONDOWN)
             {
+                // Ignore left and right mouse buttons
+                if (event.button.button == SDL_BUTTON_LEFT ||
+                    event.button.button == SDL_BUTTON_RIGHT)
+                {
+                    continue;
+                }
+
                 uint8_t mods = 0;
                 SDL_Keymod sdlMods = SDL_GetModState();
+
                 if (sdlMods & KMOD_CTRL)  mods |= Modifiers::Ctrl;
                 if (sdlMods & KMOD_SHIFT) mods |= Modifiers::Shift;
                 if (sdlMods & KMOD_ALT)   mods |= Modifiers::Alt;

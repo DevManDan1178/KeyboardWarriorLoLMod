@@ -78,7 +78,6 @@ bool Messages::writeToJSON()
     for (const auto& [category, categoryEventMessages] : eventMessages)
     {
         for (const auto& [eventKey, messages] : categoryEventMessages) {
-            std::cout << eventKey << std::endl;
             messagesData["Events"][category][eventKey] = json::array();
             
             std::vector<Message> messages = categoryEventMessages.at(eventKey);

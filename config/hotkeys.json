@@ -13,9 +13,14 @@
             "Modifiers": 0
         },
         {
-            "BindType": "None",
-            "Key": 0,
+            "BindType": "Keyboard",
+            "Key": 53,
             "Modifiers": 0
         }
-    ]
+    ],
+    "SkipEvent": {
+        "BindType": "Mouse",
+        "Key": 5,
+        "Modifiers": 1
+    }
 }

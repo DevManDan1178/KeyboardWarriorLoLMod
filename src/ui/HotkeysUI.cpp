@@ -14,11 +14,8 @@ namespace HotkeysUI {
     
     bool defaultsToggled = false;
     bool eventsToggled = false;
-
-
     
     void hotkeysUI(HotkeyManager& hotkeyManager) {
-        static std::tuple<int, int> editingHotkey(-1, 0); //first element 0 for default, 1 for event | second element for index, -1 if nothing
 
         //Defaults
         ImGui::Text("Default Hotkeys");
@@ -48,17 +45,12 @@ namespace HotkeysUI {
                 ImGui::Dummy(ImVec2(0, 2));
                 
                 
-                int& editingType = std::get<0>(editingHotkey);
-                int& editingIdx = std::get<1>(editingHotkey);
+
                 std::optional<Hotkey> &failedChange = failedChanges[idx];
                 if (ImGui::Button(std::format("{} ##DefaultsHotkey{}", failedChange.has_value() ? hotkeyStr + " [cannot change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr, idx + 1).c_str())) {
-                    editingType = 1;
-                    editingIdx = idx;
-                    Hotkey queriedHotkey = hotkeyManager.queryHotkey();
-                    
+                    Hotkey queriedHotkey = hotkeyManager.queryHotkey();                  
                     bool success = hotkeyManager.setHotkey(queriedHotkey, false, idx);
                     
-                    editingIdx = -1;
                     if (!success) {
                         failedChange = queriedHotkey;
                     } else {
@@ -109,26 +101,20 @@ namespace HotkeysUI {
                 ImGui::Dummy(ImVec2(0, 2));
                 ImGui::Text(std::format("Event Hotkey [{}]", idx + 1).c_str());
                 ImGui::Dummy(ImVec2(0, 2));
-
-                int& editingType = std::get<0>(editingHotkey);
-                int& editingIdx = std::get<1>(editingHotkey);
-                
+        
                 std::optional<Hotkey> &failedChange = failedChanges[idx];
                 if (ImGui::Button(std::format("{} ##EventsHotkey{}", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr, idx + 1).c_str())) {
-                    editingType = 1;
-                    editingIdx = idx;
                     Hotkey queriedHotkey = hotkeyManager.queryHotkey();
                     
                     bool success = hotkeyManager.setHotkey(queriedHotkey, true, idx);
                     
-                    editingIdx = -1;
                     if (!success) {
                         failedChange = queriedHotkey;
                     } else {
                         failedChange.reset();
                     }
                 }
-
+                
                 ImGui::SameLine();
 
                 if (ImGui::Button(std::format("Delete Hotkey {}##{}{}", idx + 1, "Events", idx).c_str())) {
@@ -140,6 +126,27 @@ namespace HotkeysUI {
             ImGui::Dummy(ImVec2(0, 4));
             if (ImGui::Button("Create New Hotkey ##Events")) {
                 hotkeyManager.addHotkey(Hotkey(), true);
+            }
+
+            //SkipEvent hotkey
+            ImGui::Dummy(ImVec2(0, 2));
+            ImGui::Text("Skip Event Hotkey");
+            ImGui::Dummy(ImVec2(0, 2));
+            {
+                std::string hotkeyStr = hotkeyManager.hotkeyToString(hotkeyManager.skipEventHotkey);
+                static std::optional<Hotkey> failedChange;
+                
+                if (ImGui::Button(std::format("{} ##SkipEventHotkey", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr).c_str())) {
+                    Hotkey queriedHotkey = hotkeyManager.queryHotkey();
+                    
+                    bool success = hotkeyManager.setSkipEventHotkey(queriedHotkey);
+   
+                    if (!success) {
+                        failedChange = queriedHotkey;
+                    } else {
+                        failedChange.reset();
+                    }
+                }
             }
 
             ImGui::Unindent(CATEGORY_INDENT);

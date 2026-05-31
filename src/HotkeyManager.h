@@ -32,6 +32,7 @@ class HotkeyManager {
     public:        
         std::vector<Hotkey> eventHotkeys;
         std::vector<Hotkey> defaultHotkeys;
+        Hotkey skipEventHotkey;
         Messages& messages;
         HotkeyManager(Messages& messages);
         
@@ -40,6 +41,7 @@ class HotkeyManager {
 
         bool addHotkey(Hotkey hotkey, bool isEventHotkey);
         bool setHotkey(Hotkey hotkey, bool isEventHotkey, int index);
+        bool setSkipEventHotkey(Hotkey hotkey);
         bool removeHotkey(bool isEventHotkey, int index);
         static std::string hotkeyToString(const Hotkey& hotkey);
 
