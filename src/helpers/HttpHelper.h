@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
+#include <tuple>
 
 namespace HTTPHelper {
-    std::string HttpGet(const std::string& url);
+    std::tuple<bool, std::string> HttpGet(const std::string& url);
 }

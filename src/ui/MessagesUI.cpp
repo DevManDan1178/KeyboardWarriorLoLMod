@@ -1,5 +1,6 @@
 #include "ui/MessagesUI.h"
 #include "Messages.h"
+#include "HotkeyManager.h"
 #include <vector>
 #include <string>
 #include <format>
@@ -21,8 +22,15 @@ namespace MessagesUI {
     bool defaultsToggled = false;
     std::map<int, int> eventToggleStatesMap;
     
+    std::string getHotkeyStr(HotkeyManager &hotkeyManager, int index, bool isEvent) {
+        std::vector<Hotkey> hotkeyList = isEvent? hotkeyManager.eventHotkeys : hotkeyManager.defaultHotkeys;
+        if (index >= hotkeyList.size()) {
+            return "undefined";
+        }
+        return hotkeyManager.hotkeyToString(hotkeyList[index]);
+    }
 
-    void messagesMenu(Messages &messages) {
+    void messagesMenu(Messages &messages, HotkeyManager &hotkeyManager) {
         std::vector<Message> &defaultMessages = messages.defaultMessages;
         std::unordered_map<std::string, std::unordered_map<std::string, std::vector<Message>>> &eventMessages = messages.eventMessages;
 
@@ -62,8 +70,8 @@ namespace MessagesUI {
                 ImGui::Dummy(ImVec2(0, 2));
                 ImGui::BeginGroup();
                 MessageBuffer& messageBuffer = defaultMessageBuffers[messageIdx];
-
-                ImGui::Text(std::format("Default Hotkey Number [{}]", messageIdx + 1).c_str());
+                
+                ImGui::Text(std::format("Default Hotkey Number {} - [{}]", messageIdx + 1, getHotkeyStr(hotkeyManager, messageIdx, false)).c_str());
 
                 ImGui::AlignTextToFramePadding();
                 ImGui::Text("Title: ");
@@ -238,7 +246,7 @@ namespace MessagesUI {
                     ImGui::BeginGroup();
                     MessageBuffer& messageBuffer = eventMessageBuffers[i];
 
-                    ImGui::Text(std::format("Event Hotkey Number [{}]", i + 1).c_str());
+                    ImGui::Text(std::format("Event Hotkey Number {} - [{}]", i + 1, getHotkeyStr(hotkeyManager, i, true)).c_str());
 
                     ImGui::AlignTextToFramePadding();
                     ImGui::Text("Title: ");

@@ -1,7 +1,7 @@
 {
     "Defaults": [
         {
-            "Content": "I am rank 1 Yuumi player",
+            "Content": "Don't even try bro.",
             "Title": "True Message"
         }
     ],
@@ -20,11 +20,11 @@
             "GameStart": [
                 {
                     "Content": "",
-                    "Title": "Hello"
+                    "Title": "True Message"
                 }
             ]
         },
-        "Kill": {
+        "Kills": {
             "Ace": [
                 {
                     "Content": "",
@@ -38,6 +38,7 @@
                     "Title": "True Message"
                 }
             ],
+            "Kill": [],
             "PentaKill": [
                 {
                     "Content": "",
@@ -48,12 +49,14 @@
             "TripleKill": []
         },
         "Objectives": {
+            "Atakhan": [],
             "Baron": [],
             "Dragon": [],
             "Herald": [],
             "VoidGrubs": []
         },
         "Structures": {
+            "FirstTurret": [],
             "Inhibitor": [],
             "Turret": []
         }
@@ -63,9 +66,10 @@
             "GameStart",
             "GameEnd"
         ],
-        "Kill": [
+        "Kills": [
             "FirstBlood",
             "Ace",
+            "Kill",
             "DoubleKill",
             "TripleKill",
             "QuadraKill",
@@ -75,9 +79,11 @@
             "Dragon",
             "Baron",
             "Herald",
-            "VoidGrubs"
+            "VoidGrubs",
+            "Atakhan"
         ],
         "Structures": [
+            "FirstTurret",
             "Turret",
             "Inhibitor"
         ]

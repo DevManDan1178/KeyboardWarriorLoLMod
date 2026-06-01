@@ -152,5 +152,20 @@ namespace HotkeysUI {
             ImGui::Unindent(CATEGORY_INDENT);
         }
 
+        ImGui::Text("Toggle UI Interactable (In Game)");
+        ImGui::Dummy(ImVec2(0, 2));
+        static std::optional<Hotkey> failedChange;
+        std::string hotkeyStr = hotkeyManager.hotkeyToString(hotkeyManager.toggleInGameInteractableHotkey);
+        if (ImGui::Button(std::format("{} ##ToggleInGameInteractable", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr.c_str()).c_str())) {
+            Hotkey queriedHotkey = hotkeyManager.queryHotkey();
+            
+            bool success = hotkeyManager.setToggleInGameInteractableHotkey(queriedHotkey);
+            
+            if (!success) {
+                failedChange = queriedHotkey;
+            } else {
+                failedChange.reset();
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <winhttp.h>
 #include <string>
+#include <tuple>
 #include <iostream>
 
 #pragma comment(lib, "winhttp.lib")
@@ -9,7 +10,7 @@
 namespace HTTPHelper {
 
 //USING WINDOWS
-std::string HttpGet(const std::string& url)
+std::tuple<bool, std::string> HttpGet(const std::string& url)
 {
     std::string result;
 
@@ -30,8 +31,8 @@ std::string HttpGet(const std::string& url)
     components.dwUrlPathLength = _countof(path);
 
     if (!WinHttpCrackUrl(wurl.c_str(), (DWORD)wurl.length(), 0, &components)) {
-        std::cerr << "[HttpGet] WinHttpCrackUrl failed, error: " << GetLastError() << std::endl;
-        return "";
+        //std::cerr << "[HttpGet] WinHttpCrackUrl failed, error: " << GetLastError() << std::endl;
+        return {false, ""};
     }
     // Open WinHTTP session
     HINTERNET hSession = WinHttpOpen(
@@ -43,16 +44,16 @@ std::string HttpGet(const std::string& url)
     );
 
     if (!hSession) {
-        std::cerr << "[HttpGet] WinHttpOpen failed, error: " << GetLastError() << std::endl;
-        return "";
+        //std::cerr << "[HttpGet] WinHttpOpen failed, error: " << GetLastError() << std::endl;
+        return {false, ""};
     }
 
     // Connect to server
     HINTERNET hConnect = WinHttpConnect(hSession, host, components.nPort, 0);
     if (!hConnect) {
-        std::cerr << "[HttpGet] WinHttpConnect failed, error: " << GetLastError() << std::endl;
+        //std::cerr << "[HttpGet] WinHttpConnect failed, error: " << GetLastError() << std::endl;
         WinHttpCloseHandle(hSession);
-        return "";
+        return {false, ""};
     }
 
     // Open request
@@ -68,10 +69,10 @@ std::string HttpGet(const std::string& url)
     );
 
     if (!hRequest) {
-        std::cerr << "[HttpGet] WinHttpOpenRequest failed, error: " << GetLastError() << std::endl;
+        //std::cerr << "[HttpGet] WinHttpOpenRequest failed, error: " << GetLastError() << std::endl;
         WinHttpCloseHandle(hConnect);
         WinHttpCloseHandle(hSession);
-        return "";
+        return {false, ""};
     }
 
     // Disable certificate validation for Riot localhost
@@ -85,7 +86,7 @@ std::string HttpGet(const std::string& url)
         &secureFlags,
         sizeof(secureFlags)))
     {
-        std::cerr << "[HttpGet] WinHttpSetOption failed, error: " << GetLastError() << std::endl;
+        //std::cerr << "[HttpGet] WinHttpSetOption failed, error: " << GetLastError() << std::endl;
     }
 
     // Send request
@@ -97,11 +98,11 @@ std::string HttpGet(const std::string& url)
         0,
         0))
     {
-        std::cerr << "[HttpGet] WinHttpSendRequest failed, error: " << GetLastError() << std::endl;
+        //std::cerr << "[HttpGet] WinHttpSendRequest failed, error: " << GetLastError() << std::endl;
         WinHttpCloseHandle(hRequest);
         WinHttpCloseHandle(hConnect);
         WinHttpCloseHandle(hSession);
-        return "";
+        return {false, ""};
     }
 
     // Receive response
@@ -110,7 +111,7 @@ std::string HttpGet(const std::string& url)
         WinHttpCloseHandle(hRequest);
         WinHttpCloseHandle(hConnect);
         WinHttpCloseHandle(hSession);
-        return "";
+        return {false, ""};
     }
 
     // Read response
@@ -122,19 +123,17 @@ std::string HttpGet(const std::string& url)
         if (WinHttpReadData(hRequest, buffer.data(), bytesAvailable, &bytesRead)) {
             result.append(buffer.data(), bytesRead);
         } else {
-            std::cerr << "[HttpGet] WinHttpReadData failed, error: " << GetLastError() << std::endl;
+            //std::cerr << "[HttpGet] WinHttpReadData failed, error: " << GetLastError() << std::endl;
             break;
         }
     }
-
-    std::cout << "[HttpGet] Response size: " << result.size() << std::endl;
 
     // Cleanup
     WinHttpCloseHandle(hRequest);
     WinHttpCloseHandle(hConnect);
     WinHttpCloseHandle(hSession);
 
-    return result;
+    return {true, result};
 }
 
 } // namespace HTTPHelper

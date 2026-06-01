@@ -1,20 +1,26 @@
 {
     "Defaults": [
         {
-            "BindType": "Mouse",
-            "Key": 5,
-            "Modifiers": 0
-        }
-    ],
-    "Events": [
-        {
-            "BindType": "Mouse",
-            "Key": 4,
+            "BindType": "Keyboard",
+            "Key": 2,
             "Modifiers": 0
         },
         {
             "BindType": "Keyboard",
-            "Key": 53,
+            "Key": 3,
+            "Modifiers": 0
+        }
+    ],
+    "EventHotkeyDuration": 5.0,
+    "Events": [
+        {
+            "BindType": "Mouse",
+            "Key": 5,
+            "Modifiers": 0
+        },
+        {
+            "BindType": "Mouse",
+            "Key": 4,
             "Modifiers": 0
         }
     ],
@@ -22,5 +28,10 @@
         "BindType": "Mouse",
         "Key": 5,
         "Modifiers": 1
+    },
+    "ToggleInGameInteractable": {
+        "BindType": "Keyboard",
+        "Key": 15,
+        "Modifiers": 0
     }
 }

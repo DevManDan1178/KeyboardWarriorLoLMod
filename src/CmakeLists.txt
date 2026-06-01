@@ -3,8 +3,11 @@ add_executable(KeyboardWarriorLoLMod
     LoLReader.cpp
     HotkeyManager.cpp
     Messages.cpp
+    LoLEventHandler.cpp
+    InputReader.cpp
     ui/MessagesUI.cpp
     ui/HotkeysUI.cpp
+    ui/CoreUI.cpp
     helpers/HTTPHelper.cpp
 )
 
