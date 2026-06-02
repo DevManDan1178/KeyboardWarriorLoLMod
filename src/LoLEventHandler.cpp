@@ -28,7 +28,14 @@ void LoLEventHandler::printPlayersInfo() {
 }
 
 void LoLEventHandler::processHotkeyPressed(int hotkeyIndex, bool isEvent) {
-	std::cout << "Hotkey pressed for index " << hotkeyIndex << " is event: " << isEvent << std::endl;
+	auto [eventCategory, eventName] = getCurrentEvent();
+	std::vector<Message> messageList = isEvent ? messages.eventMessages[eventCategory][eventName] : messages.defaultMessages;
+	if (hotkeyIndex >= messageList.size()) {
+		std::cout << "message out of bounds for hotkey index " << hotkeyIndex << std::endl;
+		return;
+	}
+	std::string messageContent = messageList[hotkeyIndex].messageContent;
+	chatSender.sendMessage(messageContent);
 }
 
 void LoLEventHandler::process() {
@@ -57,21 +64,33 @@ void LoLEventHandler::closeCurrentEvent() {
 	if (eventQueue.size() > 0) {
 		eventQueue.pop();
 	}
-	std::cout << "Moving on to new event: " << std::get<1>(getCurrentEvent()) << std::endl;
 	timerRunning = false;
 }
 
 
 void LoLEventHandler::queueLoLEvent(std::string eventCategory, std::string eventName) {
+	std::cout << "Event: " << eventCategory << " - " << eventName << std::endl;
 	eventQueue.push({eventCategory, eventName});
 }
 
-LoLEventHandler::LoLEventHandler(Messages& _messages, HotkeyManager& _hotkeyManager) 
-	: messages(_messages), hotkeyManager(_hotkeyManager) {}
+LoLEventHandler::LoLEventHandler(Messages& _messages, HotkeyManager& _hotkeyManager, ChatSender& _chatSender) 
+	: messages(_messages), hotkeyManager(_hotkeyManager), chatSender(_chatSender) {}
 
-void LoLEventHandler::processLoLEvent(json LoLEvent) {
-	std::string eventName = LoLEvent["EventName"];
-	
+
+void LoLEventHandler::processLoLEvent(json lolEvent) {
+	std::string eventName = lolEvent["EventName"];
+
+	std::string localSummonerName = playersInfo.localPlayer;
+	auto isAmongAssisters = [&]() -> bool {
+		std::vector<std::string> assisters = lolEvent["Assisters"].get<std::vector<std::string>>();
+		return std::find(assisters.begin(), assisters.end(), localSummonerName) != assisters.end();
+	};			
+
+	auto isKiller = [&]() -> bool {
+		return lolEvent["KillerName"].get<std::string>() == localSummonerName;
+	};
+
+
 	//GameStates
 	if (eventName == "GameStart") {
 		queueLoLEvent("GameState", "GameStart");
@@ -83,15 +102,28 @@ void LoLEventHandler::processLoLEvent(json LoLEvent) {
 	}
     //Kills
 	if (eventName == "ChampionKill") {
+		if (lolEvent["VictimName"].get<std::string>() == localSummonerName) {
+			queueLoLEvent("Kills", "Death");
+			return;
+		}
+		if (!(isKiller())) {
+			return;
+		}
 		queueLoLEvent("Kills", "Kill");
 		return;
 	} 
 	if (eventName == "FirstBlood") {
+		if (lolEvent["Recipient"].get<std::string>() != localSummonerName) {
+			return;
+		}
 		queueLoLEvent("Kills", "FirstBlood");
 		return;
 	}
 	if (eventName == "Multikill") {
-		int killStreak = LoLEvent["KillStreak"];
+		if (!isKiller()) {
+			return;
+		}
+		int killStreak = lolEvent["KillStreak"];
 		switch(killStreak) {
 			case 2:
 				queueLoLEvent("Kills", "DoubleKill");
@@ -109,37 +141,61 @@ void LoLEventHandler::processLoLEvent(json LoLEvent) {
 				break;
 		}
 	}
-	if (eventName == "Ace") {
+	if (eventName == "Ace" ) {
+		if (!(isKiller() || isAmongAssisters())) {
+			return;
+		}
 		queueLoLEvent("Kills", "Ace");
 		return;
 	}
     //Objectives
 	if (eventName == "DragonKill") {
+		if (!(isKiller() || isAmongAssisters())) {
+			return;
+		}
 		queueLoLEvent("Objectives", "Dragon");
 		return;
 	}
 	if (eventName == "BaronKill") {
-		queueLoLEvent("Objectives", "Baron");
+		if (!(isKiller() || isAmongAssisters())){
+			return;
+		}
+ 		queueLoLEvent("Objectives", "Baron");
 		return;
 	}
 	if (eventName == "HordeKill") { //Grubs
+		if (!(isKiller() || isAmongAssisters())) {
+			return;
+		}
 		queueLoLEvent("Objectives", "VoidGrubs");
 		return;
 	}
 	if (eventName == "AtakhanKill") {
+		if (!(isKiller() || isAmongAssisters())) {
+			return;
+		}
 		queueLoLEvent("Objectives", "Atakhan");
 		return;
 	}
     //Structures
 	if (eventName == "InhibKilled") {
+		if (!(isKiller() || isAmongAssisters())) {
+			return;
+		}
 		queueLoLEvent("Structures", "Inhibitor");
 		return;
 	}
 	if (eventName == "TurretKilled") {
+		if (!(isKiller())) {
+			return;
+		}
 		queueLoLEvent("Structures", "Turret");
 		return;
 	}
 	if (eventName == "FirstBrick") { //First turret
+		if (!(isKiller())) {
+			return;
+		}
 		queueLoLEvent("Structures", "FirstTurret");
 		return;
 	}

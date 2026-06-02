@@ -9,7 +9,7 @@ using json = nlohmann::json;
 const std::filesystem::path path = std::filesystem::current_path() / "config/messages.json";
 
 static Message parseMessageData(json messageData) {
-    return Message(messageData.value("Message", ""), messageData.value("Title", ""));
+    return Message(messageData.value("Content", ""), messageData.value("Title", ""));
 }
 
 static json messageToJSON(Message message) {

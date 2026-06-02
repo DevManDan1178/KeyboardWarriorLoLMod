@@ -29,42 +29,47 @@ LoLReader::LoLReader(LoLEventHandler& _lolEventHandler)
 
 std::tuple<bool, LoLPlayersInfo> LoLReader::getPlayersInfo()
 {
-    LoLPlayersInfo result;
+    LoLPlayersInfo playersInfo;
 
     try
     {
         // local player 
         std::tuple<bool, std::string> httpQueryResultLocal = HTTPHelper::HttpGet("https://127.0.0.1:2999/liveclientdata/activeplayername");
         auto [localSuccess, localBody] = httpQueryResultLocal;
+        
+        std::string localPlayerFullName;
         if (!localBody.empty())
         {
             json localJson = json::parse(localBody);
-            result.localPlayer = localJson.get<std::string>();
+            localPlayerFullName = localJson.get<std::string>();
         }
 
         // all players
         std::tuple<bool, std::string> httpQueryResult = HTTPHelper::HttpGet("https://127.0.0.1:2999/liveclientdata/playerlist");
         auto [success, body] = httpQueryResult;
         if (body.empty())
-            return {false, result};
+            return {false, playersInfo};
 
         json players = json::parse(body);
         if (!players.is_array()) {
-            return {false, result};
+            return {false, playersInfo};
         }
         
         std::string localTeam;
 
-        auto getPlayerName = [](json p) {
-            return p.value("riotIdGameName", p.value("summonerName", "")) + "#" + p.value("riotIdTagLine", "");
+        auto getPlayerName = [](json p) -> std::tuple<std::string, std::string> {
+            std::string riotBaseName = p.value("riotIdGameName", p.value("summonerName", ""));
+            return {riotBaseName, riotBaseName + "#" + p.value("riotIdTagLine", "")};
         };
 
-        // find local team
+        // find local team and local player
         for (const auto& p : players)
         {
-            if (getPlayerName(p) == result.localPlayer)
+            auto [summonerName, playerFullName] = getPlayerName(p);
+            if (playerFullName == localPlayerFullName)
             {
                 localTeam = p.value("team", "");
+                playersInfo.localPlayer = summonerName;
                 break;
             }
         }
@@ -72,40 +77,38 @@ std::tuple<bool, LoLPlayersInfo> LoLReader::getPlayersInfo()
         // split teammates/enemies
         for (const auto& p : players)
         {
-            std::string name = getPlayerName(p);
+            auto [summonerName, playerFullName] = getPlayerName(p);
 
             std::string team = p.value("team", "");
 
-            if (name == result.localPlayer) {
-                result.teammates.push_back(name);
+            if (playerFullName == localPlayerFullName) {
                 continue;
             }
             if (team == localTeam){
-                result.teammates.push_back(name);
+                playersInfo.teammates.push_back(summonerName);
             } else {
-                result.enemies.push_back(name);
+                playersInfo.enemies.push_back(summonerName);
             }
-                
         }
     }
     catch (const std::exception& e)
     {
         std::cerr << "getTeams error: " << e.what() << std::endl;
-        return {false, result};
+        return {false, playersInfo};
     }
 
-    return {true, result};
+    return {true, playersInfo};
 }
 
 void LoLReader::liveClientEventLoop()
 {
-    int nextEventID = 0;
+    int currentEventId = -1;
 
     while (running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(TIME_BETWEEN_EVENT_LOOP));
         
         //Gets all event with id >= lastEventId
-        std::string queryAdress = "https://127.0.0.1:2999/liveclientdata/eventdata?eventID=" + std::to_string(nextEventID);
+        std::string queryAdress = "https://127.0.0.1:2999/liveclientdata/eventdata?eventID=" + std::to_string(std::max(currentEventId, 0));
         std::tuple<bool, std::string> httpQueryResult = HTTPHelper::HttpGet(queryAdress);
         
         auto [success, body] = httpQueryResult;
@@ -115,7 +118,6 @@ void LoLReader::liveClientEventLoop()
         
         auto pushEvent = [&](const json& event)
         {
-            std::lock_guard<std::mutex> lock(eventMutex);
             lolEventHandler.processLoLEvent(event);
         };
         
@@ -135,13 +137,13 @@ void LoLReader::liveClientEventLoop()
                     }
 
                     int id = event["EventID"];
-                    if (id < nextEventID) {
+                    if (id <= currentEventId) {
                         continue;
                     }
                     
                     pushEvent(event);
                     
-                    nextEventID = std::max(nextEventID + 1, id);
+                    currentEventId = std::max(currentEventId, id);
                 }
             }
             catch (const std::exception& e)

@@ -89,8 +89,8 @@ int main() {
     bool running          = true;
     bool isIdle           = true;
     bool clickThrough     = true; // tracks current click-through state during game
-
-    LoLEventHandler lolEventHandler = LoLEventHandler(messages, hotkeyManager);
+    ChatSender chatSender = ChatSender();
+    LoLEventHandler lolEventHandler = LoLEventHandler(messages, hotkeyManager, chatSender);
     LoLReader lolReader = LoLReader(lolEventHandler);
 
     InputReader::start();
@@ -117,6 +117,7 @@ int main() {
         for (int i = 0; i < (int)hotkeyManager.defaultHotkeys.size(); i++) {
             Hotkey hotkey = hotkeyManager.defaultHotkeys[i];
             InputReader::onHotkey(hotkey, [&lolEventHandler, i]() {
+                std::cout << "hotkey pressed for default message " << std::endl;
                 lolEventHandler.processHotkeyPressed(i, false);
             });
         }
@@ -129,16 +130,24 @@ int main() {
             });
         }
 
+        InputReader::onHotkey(hotkeyManager.skipEventHotkey, [&]() {
+            lolEventHandler.closeCurrentEvent();
+        });
+
         // Toggle interactable
         InputReader::onHotkey(hotkeyManager.toggleInGameInteractableHotkey, [&]() {
-            clickThrough = !clickThrough;
-            setClickThrough(hwnd, clickThrough);
-            std::cout << "Click-through: " << clickThrough << "\n";
+            if (!clickThrough) {
+                return; 
+            }
+            clickThrough = false;
+            setClickThrough(hwnd, false);
         });
         InputReader::onHotkeyRelease(hotkeyManager.toggleInGameInteractableHotkey, [&]() {
-            clickThrough = !clickThrough;
-            setClickThrough(hwnd, clickThrough);
-            std::cout << "Click-through: " << clickThrough << "\n";
+            if (clickThrough) {
+                return; 
+            }
+            clickThrough = true;
+            setClickThrough(hwnd, true);
         });
     };
 
@@ -164,6 +173,7 @@ int main() {
             if (!isIdle)
                 onIdle();
             CoreUI::mainUIFrame(window, hwnd, messages, hotkeyManager);
+            
         } else {
             if (isIdle)
                 onGameStart(); 

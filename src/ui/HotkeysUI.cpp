@@ -16,7 +16,8 @@ namespace HotkeysUI {
     bool eventsToggled = false;
     
     void hotkeysUI(HotkeyManager& hotkeyManager) {
-
+        ImGui::Text("-----  [Hotkeys]  -----");
+        ImGui::Dummy(ImVec2(0, 4));
         //Defaults
         ImGui::Text("Default Hotkeys");
         ImGui::Dummy(ImVec2(0, 2));
@@ -167,5 +168,8 @@ namespace HotkeysUI {
                 failedChange.reset();
             }
         }
+        ImGui::Dummy(ImVec2(0, 2));
+        ImGui::Text("Shift is treated as a hotkey modifier (and not as an individual hotkey)");
+        ImGui::Text("!! Alt and Ctrl are not supported as hotkey modifiers");
     }
 }

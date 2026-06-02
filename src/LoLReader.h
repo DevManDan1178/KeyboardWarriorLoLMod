@@ -25,7 +25,6 @@ class LoLReader {
         bool isInGame;
     private:
         std::atomic<bool> running;  
-        std::mutex eventMutex;
         std::thread workerThread;
 
         void stopCoreLoop();

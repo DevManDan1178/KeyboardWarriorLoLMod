@@ -40,9 +40,10 @@ namespace MessagesUI {
         static std::tuple<int, int> editedObject(-1, -1);
         static std::map<int, std::vector<MessageBuffer>> messageBuffersMap;
 
+        ImGui::Text("----- [Messages] -----");
         std::vector<Message> defaultMessagesList = messages.defaultMessages;
         //Default Messages
-
+        ImGui::Dummy(ImVec2(0, 4));
         ImGui::Text("Default Messages");
         ImGui::Dummy(ImVec2(0, 2));
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.5f, .5f, defaultsToggled ? 1.0f : .5f, 1.0f));

@@ -139,7 +139,7 @@ namespace CoreUI {
         ImGui::Dummy(ImVec2(0, 4));
         std::vector<Hotkey> eventHotkeys = hotkeyManager.eventHotkeys;
         if (!(eventCategory.empty() || eventName.empty())) {
-            ImGui::Text(std::format("Event - [{}]", eventName).c_str());
+            ImGui::Text(std::format("[{}] - (Skip: {})", eventName, hotkeyManager.hotkeyToString(hotkeyManager.skipEventHotkey)).c_str());
 
             std::vector<Message> eventMessages = messages.eventMessages[eventCategory][eventName];
             for (int i = 0; i < eventMessages.size(); i++) {

@@ -262,6 +262,15 @@ static int SDLToUiohook(SDL_Scancode sc)
             return VC_UNDEFINED;
     }
 }
+
+//Alt and Ctrl are invalid because they block chat input in LoL
+static bool areInvalidsModifiersHeld()
+{
+    SDL_Keymod mods = SDL_GetModState();
+
+    return (mods & KMOD_CTRL) || (mods & KMOD_ALT);
+}
+
 Hotkey HotkeyManager::queryHotkey()
 {
     SDL_Event event;
@@ -280,14 +289,17 @@ Hotkey HotkeyManager::queryHotkey()
                 // Ignore modifier keys
                 if (sc == SDL_SCANCODE_LCTRL  || sc == SDL_SCANCODE_RCTRL ||
                     sc == SDL_SCANCODE_LSHIFT || sc == SDL_SCANCODE_RSHIFT ||
-                    sc == SDL_SCANCODE_LALT   || sc == SDL_SCANCODE_RALT)
-                {
+                    sc == SDL_SCANCODE_LALT   || sc == SDL_SCANCODE_RALT ||
+                    areInvalidsModifiersHeld()){
+                    continue;
                     continue;
                 }
 
                 int key = SDLToUiohook(sc);
-                if (key == VC_UNDEFINED)
+                if (key == VC_UNDEFINED) {
                     continue;
+                }
+                    
 
                 uint8_t mods = 0;
                 SDL_Keymod sdlMods = SDL_GetModState();

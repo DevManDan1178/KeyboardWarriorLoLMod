@@ -7,6 +7,7 @@
 #include "unordered_map"
 #include <variant>
 #include "LoLTypes.h"
+#include "ChatSender.h"
 #include <queue>
 #include <tuple>
 #include <chrono>
@@ -21,10 +22,11 @@ class LoLEventHandler {
         Messages &messages;
         HotkeyManager &hotkeyManager;
         LoLPlayersInfo playersInfo;
+        ChatSender &chatSender;
         bool timerRunning;
         std::chrono::steady_clock::time_point currentEventStartTime;
 
-        LoLEventHandler(Messages &_messages, HotkeyManager &_hotkeyManager);
+        LoLEventHandler(Messages &_messages, HotkeyManager &_hotkeyManager, ChatSender &_chatSender);
         void processLoLEvent(json LoLEvent);
         
         void closeCurrentEvent();

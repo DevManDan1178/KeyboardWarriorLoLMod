@@ -1,14 +1,9 @@
 {
     "Defaults": [
         {
-            "BindType": "Keyboard",
-            "Key": 2,
-            "Modifiers": 0
-        },
-        {
-            "BindType": "Keyboard",
-            "Key": 3,
-            "Modifiers": 0
+            "BindType": "Mouse",
+            "Key": 5,
+            "Modifiers": 2
         }
     ],
     "EventHotkeyDuration": 5.0,
@@ -26,7 +21,7 @@
     ],
     "SkipEvent": {
         "BindType": "Mouse",
-        "Key": 5,
+        "Key": 4,
         "Modifiers": 1
     },
     "ToggleInGameInteractable": {
