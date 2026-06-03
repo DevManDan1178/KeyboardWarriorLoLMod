@@ -2,24 +2,25 @@
     "Defaults": [],
     "Events": {
         "GameState": {
-            "GameStart": []
+            "Game Start": []
         },
         "Kills": {
             "Ace": [],
             "Death": [],
-            "DoubleKill": [],
-            "FirstBlood": [],
-            "Kill": [],
-            "PentaKill": [],
-            "QuadraKill": [],
+            "Double Kill": [],
+            "First Blood": [],
+            "Assisted Kill": [],
+            "Solo Kill": [],
+            "Pentakill": [],
+            "Quadra Kill": [],
             "TripleKill": []
         },
         "Objectives": {
             "Atakhan": [],
             "Baron": [],
             "Dragon": [],
-            "Herald": [],
-            "VoidGrubs": []
+            "Rift Herald": [],
+            "Void Grubs": []
         },
         "Structures": {
             "FirstTurret": [],
@@ -29,27 +30,29 @@
     },
     "EventsKeyOrder": {
         "GameState": [
-            "GameStart"
+            "Game Start"
         ],
         "Kills": [
-            "FirstBlood",
+            "First Blood",  
+            "Assisted Kill",
+            "Solo Kill",
+            "Double Kill",
+            "Triple Kill",
+            "Quadra Kill",
+            "Pentakill",
             "Ace",
-            "Kill",
-            "DoubleKill",
-            "TripleKill",
-            "QuadraKill",
-            "PentaKill",
             "Death"
+            
         ],
         "Objectives": [
             "Dragon",
             "Baron",
-            "Herald",
-            "VoidGrubs",
+            "Rift Herald",
+            "Void Grubs",
             "Atakhan"
         ],
         "Structures": [
-            "FirstTurret",
+            "First Turret",
             "Turret",
             "Inhibitor"
         ]
