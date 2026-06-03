@@ -24,23 +24,24 @@ class LoLEventHandler {
         HotkeyManager &hotkeyManager;
         LoLPlayersInfo playersInfo;
         ChatSender &chatSender;
-        std::function<void(std::string, std::string)> &onCurrentEventChanged;
+        std::function<void(std::string, std::string)> &displayEventChange;
 
         std::chrono::steady_clock::time_point currentEventStartTime;
 
 
-        LoLEventHandler(Messages &_messages, HotkeyManager &_hotkeyManager, ChatSender &_chatSender, std::function<void(std::string, std::string)> &_onCurrentEventChanged);
+        LoLEventHandler(Messages &_messages, HotkeyManager &_hotkeyManager, ChatSender &_chatSender, std::function<void(std::string, std::string)> &_displayEventChange);
         void processLoLEvent(json LoLEvent);
         
         void closeCurrentEvent();
         void process();
 
         void processHotkeyPressed(int hotkeyIndex, bool isEvent);
-
+        float getHotkeyExpirationProgress();
         std::tuple<std::string, std::string> getCurrentEvent();
         std::tuple<std::string, std::string> getNextEvent();
     private:   
         void updateCurrentEventStartTime();
         void queueLoLEvent(std::string eventCategory, std::string eventName, bool forceAsCurrent = false);
         void printPlayersInfo();
+        float getEventHotkeyDuration();
 };

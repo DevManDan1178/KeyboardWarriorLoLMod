@@ -144,7 +144,7 @@ namespace HotkeysUI {
         ImGui::Indent(SECTION_INDENT);
 
         ImGui::Dummy(ImVec2(0, 4));
-        
+
         ImGui::Text("Skip Event Hotkey");
         ImGui::Dummy(ImVec2(0, 2));
         {
@@ -213,7 +213,7 @@ namespace HotkeysUI {
         ImGui::SliderFloat("[Ctrl + Click] for Manual Input##Event Popup Duration", &eventHotkeyDuration, hotkeyManager.minEventHotkeyDuration, hotkeyManager.maxEventHotkeyDuration, "%.1fs");
         ImGui::Unindent(CATEGORY_INDENT);
         eventHotkeyDuration = std::clamp(eventHotkeyDuration, hotkeyManager.minEventHotkeyDuration, hotkeyManager.maxEventHotkeyDuration);
-        if (!ImGui::IsItemActive()) {
+        if (!ImGui::IsItemActive()) {   
             hotkeyManager.setEventHotkeyDuration(eventHotkeyDuration);
         }
         

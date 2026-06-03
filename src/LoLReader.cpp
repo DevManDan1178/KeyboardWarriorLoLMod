@@ -102,8 +102,9 @@ std::tuple<bool, LoLPlayersInfo> LoLReader::getPlayersInfo()
 void LoLReader::liveClientEventLoop()
 {
     int currentEventId = -1;
-
-    while (running) {
+    bool gameEndDetected = false;
+    
+    while (running && !gameEndDetected) {
         std::this_thread::sleep_for(std::chrono::milliseconds(TIME_BETWEEN_EVENT_LOOP));
         
         //Gets all event with id >= lastEventId
@@ -123,6 +124,7 @@ void LoLReader::liveClientEventLoop()
         if (!body.empty()) {
             try
             {
+                
                 json data = json::parse(body);
                 if (!data.contains("Events") || !data["Events"].is_array()) {
                     std::cout << "No event list for LoLReader" << std::endl;
@@ -131,8 +133,12 @@ void LoLReader::liveClientEventLoop()
 
                 for (const auto& event : data["Events"])
                 {
-                    if (!event.contains("EventID") || !event["EventID"].is_number_integer()){
+                    if (!event.contains("EventID") || !event["EventID"].is_number_integer() || !event.contains("EventName") || !event["EventName"].is_string()){
                         continue;
+                    }
+                    if (event["EventName"].get<std::string>() == "GameEnd") {
+                        gameEndDetected = true;
+                        break;
                     }
 
                     int id = event["EventID"];
@@ -192,7 +198,6 @@ void LoLReader::initializeLoop() {
 }
 
 void LoLReader::coreLoop() {
-    std::cout << "Starting to run Core Loop" << std::endl;
     while (running) {
         isInGame = false;
         if (isLoadingOrInGame()) {

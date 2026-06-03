@@ -50,6 +50,15 @@ void LoLEventHandler::updateCurrentEventStartTime() {
     currentEventStartTime = steady_clock::now();
 }
 
+float LoLEventHandler::getEventHotkeyDuration() {
+	//If the current event is a quadra kill, can wait for a pentakill (30s)
+	auto [eventCategory, eventName] = getCurrentEvent();
+	if (eventName == "Quadra Kill") {
+		return 30.0f;
+	}
+	return hotkeyManager.eventHotkeyDuration;
+}
+
 void LoLEventHandler::process() {
 	using namespace std::chrono;
 
@@ -60,16 +69,24 @@ void LoLEventHandler::process() {
     }
 
     auto elapsed = duration_cast<milliseconds>(steady_clock::now() - currentEventStartTime).count();
-    if (elapsed >= hotkeyManager.eventHotkeyDuration * 1000) {
+    if (elapsed >= getEventHotkeyDuration() * 1000.0f) {
         closeCurrentEvent();
     }
+}
+
+float LoLEventHandler::getHotkeyExpirationProgress() {
+	using namespace std::chrono;
+	float elapsed = duration_cast<milliseconds>(steady_clock::now() - currentEventStartTime).count() * 1.0f;
+	float total = getEventHotkeyDuration() * 1000.0f;
+
+	return std::clamp(elapsed/total, 0.0f, 1.0f);
 }
 
 void LoLEventHandler::closeCurrentEvent() {
 	if (eventQueue.size() > 0) {
 		eventQueue.pop();
 		auto [eventCategory, eventName] = getCurrentEvent();
-		onCurrentEventChanged(eventCategory, eventName);
+		displayEventChange(eventCategory, eventName);
 		updateCurrentEventStartTime();
 	}
 }
@@ -80,18 +97,21 @@ void LoLEventHandler::queueLoLEvent(std::string eventCategory, std::string event
 		updateCurrentEventStartTime();
 		std::queue<std::tuple<std::string, std::string>>().swap(eventQueue);
 		eventQueue.push({eventCategory, eventName});
-		onCurrentEventChanged(eventCategory, eventName);
+		displayEventChange(eventCategory, eventName);
 		return;
 	}
 	if (eventQueue.size() == 0) {
 		updateCurrentEventStartTime();
-		onCurrentEventChanged(eventCategory, eventName);
 	}
+
 	eventQueue.push({eventCategory, eventName});
+	if (eventQueue.size() <= 2) {
+		displayEventChange(eventCategory, eventName);
+	}
 }
 
-LoLEventHandler::LoLEventHandler(Messages& _messages, HotkeyManager& _hotkeyManager, ChatSender& _chatSender, std::function<void(std::string, std::string)> &_onCurrentEventChanged) 
-	: messages(_messages), hotkeyManager(_hotkeyManager), chatSender(_chatSender), onCurrentEventChanged(_onCurrentEventChanged) {}
+LoLEventHandler::LoLEventHandler(Messages& _messages, HotkeyManager& _hotkeyManager, ChatSender& _chatSender, std::function<void(std::string, std::string)> &_displayEventChange) 
+	: messages(_messages), hotkeyManager(_hotkeyManager), chatSender(_chatSender), displayEventChange(_displayEventChange) {}
 
 
 double lastPlayerKillTime = -1000.0;

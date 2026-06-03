@@ -136,11 +136,12 @@ int main() {
     auto onIdle = [&]() {
         isIdle = true;
         setBorderless(window, hwnd, false);
-        SDL_SetWindowSize(window, 600, 600);
         setClickThrough(hwnd, false);
         SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
-        InputReader::clearHotkeys();
+        
         setOverlayVisible(true);
+        SDL_SetWindowSize(window, 600, 600);
+        InputReader::clearHotkeys();
     };
 
     auto onGameStart = [&]() {

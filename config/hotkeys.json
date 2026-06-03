@@ -2,11 +2,7 @@
     "Defaults": [],
     "EventHotkeyDuration": 10.0,
     "Events": [],
-    "SkipEvent": {
-        "BindType": "Mouse",
-        "Key": 4,
-        "Modifiers": 1
-    },
+    "SkipEvent": {},
     "ToggleInGameAlwaysVisible": {
         "BindType": "Keyboard",
         "Key": 15,

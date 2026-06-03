@@ -23,7 +23,7 @@ namespace CoreUI {
     int getEventOverlayUIFrameHeight(size_t defaultMessageListCount, size_t eventMessageListCount, bool hasNextEvent) {
         return 115
         + (defaultMessageListCount > 0 ? 20 : 0)
-        + (hasNextEvent ? 25 : 0)
+        + (hasNextEvent ? 20 : 0)
         + 20 * (int) (defaultMessageListCount + eventMessageListCount);
     }
 
@@ -100,6 +100,41 @@ namespace CoreUI {
         SDL_GL_SwapWindow(window);
     }
 
+    static void drawProgressBar(float progress, std::string text) {
+        progress = std::clamp(progress, 0.0f, 1.0f);
+
+        ImVec2 size(ImGui::GetContentRegionAvail().x, 20.0f);
+        ImVec2 pos = ImGui::GetCursorScreenPos();
+
+        ImDrawList* draw = ImGui::GetWindowDrawList();
+
+        // background
+        draw->AddRectFilled(
+            pos,
+            ImVec2(pos.x + size.x, pos.y + size.y),
+            IM_COL32(25, 25, 25, 255),
+            4.0f
+        );
+
+        // fill
+        draw->AddRectFilled(
+            pos,
+            ImVec2(pos.x + size.x * progress, pos.y + size.y),
+            IM_COL32(80, 160, 80, 150),
+            4.0f
+        );
+        ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
+        ImVec2 textPos(
+            pos.x + (size.x - textSize.x) * 0.5f,
+            pos.y + (size.y - textSize.y) * 0.5f
+        );
+
+        draw->AddText(textPos, IM_COL32(255, 255, 255, 255), text.c_str());
+
+        // advance layout cursor
+        ImGui::Dummy(size);
+    }
+
     void eventsOverlayUIFrame(SDL_Window* window, HWND hwnd, LoLEventHandler& lolEventHandler, Messages& messages, HotkeyManager& hotkeyManager, bool interactable, bool& alwaysVisible) {
         auto [eventCategory, eventName] = lolEventHandler.getCurrentEvent();
 
@@ -143,8 +178,14 @@ namespace CoreUI {
         //Events
         ImGui::Dummy(ImVec2(0, 4));
         std::vector<Hotkey> eventHotkeys = hotkeyManager.eventHotkeys;
-        if (!(eventCategory.empty() || eventName.empty())/* && messages.eventMessages[eventCategory][eventName].size() > 0*/) {
-            ImGui::Text(std::format("Event: \"{}\" - Skip: [{}]", eventName, hotkeyManager.hotkeyToString(hotkeyManager.skipEventHotkey)).c_str());
+        if (!(eventCategory.empty() || eventName.empty()) /*&& messages.eventMessages[eventCategory][eventName].size() > 0*/) {
+            bool hasSkipEventHotkey = hotkeyManager.skipEventHotkey.bindType != BindType::None;
+            std::string progressBarText = std::format("Event: \"{}\"{}", 
+                eventName, 
+                hasSkipEventHotkey ? std::format(" - Skip: [{}]", hotkeyManager.hotkeyToString(hotkeyManager.skipEventHotkey)) : ""
+                );
+            drawProgressBar(lolEventHandler.getHotkeyExpirationProgress(), progressBarText);
+            
             std::vector<Message> eventMessages = messages.eventMessages[eventCategory][eventName];
             for (int i = 0; i < eventMessages.size(); i++) {
                 std::string messageTitle = eventMessages[i].messageTitle;
@@ -154,7 +195,7 @@ namespace CoreUI {
             auto [nextEventCategory, nextEventName] = lolEventHandler.getNextEvent();
             if (!(nextEventCategory.empty() || nextEventName.empty())) {
                 ImGui::Dummy(ImVec2(0, 2));
-                ImGui::Text(std::format("Next Event: {}", nextEventName).c_str());
+                ImGui::Text(std::format("Next: \"{}\"", nextEventName).c_str());
             }
         } else {
             ImGui::Text("[No current event]");

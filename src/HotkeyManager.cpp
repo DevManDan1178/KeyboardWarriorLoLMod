@@ -513,7 +513,7 @@ std::string HotkeyManager::hotkeyToString(const Hotkey& hotkey)
     }
     else
     {
-        ss << "Undefined";
+        ss << "undefined";
     }
 
     return ss.str();
