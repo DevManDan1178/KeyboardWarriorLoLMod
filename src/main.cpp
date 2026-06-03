@@ -109,23 +109,29 @@ int main() {
         ShowWindow(hwnd, overlayVisible ? SW_SHOW : SW_HIDE);
     };
 
-    std::function<void(std::string, std::string)> displayEventChange = [&](std::string eventCategory, std::string eventName) {
+    std::function<void(std::string, std::string)> displayEventChange;
+
+    ChatSender chatSender = ChatSender();
+    LoLEventHandler lolEventHandler = LoLEventHandler(messages, hotkeyManager, chatSender, displayEventChange);
+    LoLReader lolReader = LoLReader(lolEventHandler);
+    
+    auto hasNextEvent = [&]() -> bool {
+        auto [nextEventCategory, nextEventName] = lolEventHandler.getNextEvent();
+        return !(nextEventCategory.empty() || nextEventName.empty());
+    };
+
+    displayEventChange = [&](std::string eventCategory, std::string eventName) {
         if (eventCategory.empty()  || eventName.empty()) {
             if (!visibleAlways) {
                 setOverlayVisible(false);
                 return;
             }
-            SDL_SetWindowSize(window, 400, CoreUI::getEventOverlayUIFrameHeight(messages.defaultMessages.size(), 0));
+            SDL_SetWindowSize(window, 400, CoreUI::getEventOverlayUIFrameHeight(messages.defaultMessages.size(), 0, hasNextEvent()));
             return;
         }
         setOverlayVisible(true);
-        SDL_SetWindowSize(window, 400, CoreUI::getEventOverlayUIFrameHeight(messages.defaultMessages.size(), messages.eventMessages[eventCategory][eventName].size()));
+        SDL_SetWindowSize(window, 400, CoreUI::getEventOverlayUIFrameHeight(messages.defaultMessages.size(), messages.eventMessages[eventCategory][eventName].size(), hasNextEvent()));
     };
-
-    ChatSender chatSender = ChatSender();
-    LoLEventHandler lolEventHandler = LoLEventHandler(messages, hotkeyManager, chatSender, displayEventChange);
-    LoLReader lolReader = LoLReader(lolEventHandler);
-
 
     auto onIdle = [&]() {
         isIdle = true;
@@ -148,6 +154,9 @@ int main() {
         SetLayeredWindowAttributes(hwnd, 0, 175, LWA_ALPHA);
         setClickThrough(hwnd, true);
         SDL_RestoreWindow(window);
+        SDL_SetWindowSize(window, 400, CoreUI::getEventOverlayUIFrameHeight(messages.defaultMessages.size(), 0, false));
+   
+
         InputReader::clearHotkeys();
 
         // Default message hotkeys

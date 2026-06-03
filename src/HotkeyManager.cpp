@@ -350,7 +350,7 @@ Hotkey HotkeyManager::queryHotkey()
                 }
 
                 int key = SDLToUiohook(sc);
-                std::cout << "KEY: " << SDL_GetScancodeName(sc) << std::endl;
+                //std::cout << "KEY: " << SDL_GetScancodeName(sc) << std::endl;
                 if (key == VC_UNDEFINED) {
                     continue;
                 }

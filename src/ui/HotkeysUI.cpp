@@ -135,28 +135,6 @@ namespace HotkeysUI {
             if (ImGui::Button("Create New Hotkey ##Events")) {
                 hotkeyManager.addHotkey(Hotkey(), true);
             }
-
-            //SkipEvent hotkey
-            ImGui::Dummy(ImVec2(0, 4));
-            ImGui::Text("Skip Event Hotkey");
-            ImGui::Dummy(ImVec2(0, 2));
-            {
-                std::string hotkeyStr = hotkeyManager.hotkeyToString(hotkeyManager.skipEventHotkey);
-                static std::optional<Hotkey> failedChange;
-                
-                if (ImGui::Button(std::format("{} ##SkipEventHotkey", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr).c_str())) {
-                    Hotkey queriedHotkey = hotkeyManager.queryHotkey();
-                    
-                    bool success = hotkeyManager.setSkipEventHotkey(queriedHotkey);
-   
-                    if (!success) {
-                        failedChange = queriedHotkey;
-                    } else {
-                        failedChange.reset();
-                    }
-                }
-            }
-
             ImGui::Unindent(CATEGORY_INDENT);
         }
         ImGui::Unindent(SECTION_INDENT);
@@ -164,6 +142,28 @@ namespace HotkeysUI {
         ImGui::Dummy(ImVec2(0, 6));
         ImGui::Text("-- [Mod Configurations] --");
         ImGui::Indent(SECTION_INDENT);
+
+        ImGui::Dummy(ImVec2(0, 4));
+        
+        ImGui::Text("Skip Event Hotkey");
+        ImGui::Dummy(ImVec2(0, 2));
+        {
+            std::string hotkeyStr = hotkeyManager.hotkeyToString(hotkeyManager.skipEventHotkey);
+            static std::optional<Hotkey> failedChange;
+            
+            if (ImGui::Button(std::format("{} ##SkipEventHotkey", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr).c_str())) {
+                Hotkey queriedHotkey = hotkeyManager.queryHotkey();
+                
+                bool success = hotkeyManager.setSkipEventHotkey(queriedHotkey);
+
+                if (!success) {
+                    failedChange = queriedHotkey;
+                } else {
+                    failedChange.reset();
+                }
+            }
+        }
+
         ImGui::Dummy(ImVec2(0, 4));           
         ImGui::Text("Toggle Interactable");
         ImGui::Dummy(ImVec2(0, 2));

@@ -20,9 +20,10 @@ const ImVec4 DEFAULT_TITLE_BAR_HOVERED_COLOR = ImVec4(0.5f, 0.5f, 0.5f, 0.85f);
 
 namespace CoreUI {
 
-    int getEventOverlayUIFrameHeight(size_t defaultMessageListCount, size_t eventMessageListCount) {
+    int getEventOverlayUIFrameHeight(size_t defaultMessageListCount, size_t eventMessageListCount, bool hasNextEvent) {
         return 115
-        + (defaultMessageListCount > 0 ? 20 : 0) 
+        + (defaultMessageListCount > 0 ? 20 : 0)
+        + (hasNextEvent ? 25 : 0)
         + 20 * (int) (defaultMessageListCount + eventMessageListCount);
     }
 
@@ -142,13 +143,18 @@ namespace CoreUI {
         //Events
         ImGui::Dummy(ImVec2(0, 4));
         std::vector<Hotkey> eventHotkeys = hotkeyManager.eventHotkeys;
-        if (!(eventCategory.empty() || eventName.empty()) && messages.eventMessages[eventCategory][eventName].size() > 0) {
+        if (!(eventCategory.empty() || eventName.empty())/* && messages.eventMessages[eventCategory][eventName].size() > 0*/) {
             ImGui::Text(std::format("Event: \"{}\" - Skip: [{}]", eventName, hotkeyManager.hotkeyToString(hotkeyManager.skipEventHotkey)).c_str());
             std::vector<Message> eventMessages = messages.eventMessages[eventCategory][eventName];
             for (int i = 0; i < eventMessages.size(); i++) {
                 std::string messageTitle = eventMessages[i].messageTitle;
                 std::string hotkeyStr = eventHotkeys.size() > i ? hotkeyManager.hotkeyToString(eventHotkeys[i]) : "undefined";
                 ImGui::Text(std::format("Message {}: \"{}\" - [{}]", i + 1, messageTitle, hotkeyStr).c_str());
+            }
+            auto [nextEventCategory, nextEventName] = lolEventHandler.getNextEvent();
+            if (!(nextEventCategory.empty() || nextEventName.empty())) {
+                ImGui::Dummy(ImVec2(0, 2));
+                ImGui::Text(std::format("Next Event: {}", nextEventName).c_str());
             }
         } else {
             ImGui::Text("[No current event]");

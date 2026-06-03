@@ -55,7 +55,6 @@ std::tuple<bool, LoLPlayersInfo> LoLReader::getPlayersInfo()
             return {false, playersInfo};
         }
         
-        std::string localTeam;
 
         auto getPlayerName = [](json p) -> std::tuple<std::string, std::string> {
             std::string riotBaseName = p.value("riotIdGameName", p.value("summonerName", ""));
@@ -68,7 +67,7 @@ std::tuple<bool, LoLPlayersInfo> LoLReader::getPlayersInfo()
             auto [summonerName, playerFullName] = getPlayerName(p);
             if (playerFullName == localPlayerFullName)
             {
-                localTeam = p.value("team", "");
+                playersInfo.localPlayerTeam = p.value("team", "");
                 playersInfo.localPlayer = summonerName;
                 break;
             }
@@ -84,7 +83,7 @@ std::tuple<bool, LoLPlayersInfo> LoLReader::getPlayersInfo()
             if (playerFullName == localPlayerFullName) {
                 continue;
             }
-            if (team == localTeam){
+            if (team == playersInfo.localPlayerTeam){
                 playersInfo.teammates.push_back(summonerName);
             } else {
                 playersInfo.enemies.push_back(summonerName);
@@ -148,7 +147,7 @@ void LoLReader::liveClientEventLoop()
             }
             catch (const std::exception& e)
             {
-                std::cerr << "LoLReader parse error: " << e.what() << std::endl;
+                std::cerr << "LoLReader parse error: " << e.what() << std::endl << queryAdress << std::endl;
             }
         } else {
             std::cout << "Empty event list for LoLReader" << std::endl;
@@ -206,12 +205,10 @@ void LoLReader::coreLoop() {
                     continue;
                 }
                 lolEventHandler.playersInfo = playersInfo;
-                std::cout << "Game Detected: Starting Live Client Event Loop" << std::endl;
-                
+
                 isInGame = true;
                 liveClientEventLoop();
             } else {
-                //std::cout << "Is in loading screen: tick rate is lowered" << std::endl;
                 std::this_thread::sleep_for(std::chrono::milliseconds(LOADING_TIME_BETWEEN_CHECKS));
             }
         } else {
@@ -219,7 +216,6 @@ void LoLReader::coreLoop() {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(IDLE_TIME_BETWEEN_CHECKS));
     }
-    std::cout << "Core loop closed" << std::endl;
 }
 
 void LoLReader::closeLoop() {

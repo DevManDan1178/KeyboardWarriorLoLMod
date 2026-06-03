@@ -26,7 +26,6 @@ class LoLEventHandler {
         ChatSender &chatSender;
         std::function<void(std::string, std::string)> &onCurrentEventChanged;
 
-        bool timerRunning;
         std::chrono::steady_clock::time_point currentEventStartTime;
 
 
@@ -39,7 +38,9 @@ class LoLEventHandler {
         void processHotkeyPressed(int hotkeyIndex, bool isEvent);
 
         std::tuple<std::string, std::string> getCurrentEvent();
+        std::tuple<std::string, std::string> getNextEvent();
     private:   
-        void queueLoLEvent(std::string eventCategory, std::string eventName);
+        void updateCurrentEventStartTime();
+        void queueLoLEvent(std::string eventCategory, std::string eventName, bool forceAsCurrent = false);
         void printPlayersInfo();
 };

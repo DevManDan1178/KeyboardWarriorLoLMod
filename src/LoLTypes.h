@@ -7,7 +7,7 @@ struct LoLPlayersInfo
     std::string localPlayer;
     std::vector<std::string> teammates;
     std::vector<std::string> enemies;
-
+    std::string localPlayerTeam;
     LoLPlayersInfo() = default;
 };
 

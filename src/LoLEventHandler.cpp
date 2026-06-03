@@ -14,6 +14,14 @@ std::tuple<std::string, std::string> LoLEventHandler::getCurrentEvent() {
 	return eventQueue.front();
 }
 
+std::tuple<std::string, std::string> LoLEventHandler::getNextEvent() {
+	if (eventQueue.size() <= 1) {
+		return {"", ""};
+	}
+	std::queue<std::tuple<std::string, std::string>> queueClone = eventQueue;
+	queueClone.pop();
+	return queueClone.front();
+}
 
 void LoLEventHandler::printPlayersInfo() {
 	std::cout << "localPlayer : " << playersInfo.localPlayer << "\nteammates : ";
@@ -37,19 +45,18 @@ void LoLEventHandler::processHotkeyPressed(int hotkeyIndex, bool isEvent) {
 	chatSender.sendMessage(messageContent);
 }
 
+void LoLEventHandler::updateCurrentEventStartTime() {
+	using namespace std::chrono;
+    currentEventStartTime = steady_clock::now();
+}
+
 void LoLEventHandler::process() {
 	using namespace std::chrono;
 
     auto [eventCategory, eventName] = getCurrentEvent();
 
     if (eventCategory.empty() && eventName.empty()) {
-        timerRunning = false; 
         return;
-    }
-	
-    if (!timerRunning) {
-    	currentEventStartTime = steady_clock::now();
-        timerRunning = true;
     }
 
     auto elapsed = duration_cast<milliseconds>(steady_clock::now() - currentEventStartTime).count();
@@ -63,13 +70,21 @@ void LoLEventHandler::closeCurrentEvent() {
 		eventQueue.pop();
 		auto [eventCategory, eventName] = getCurrentEvent();
 		onCurrentEventChanged(eventCategory, eventName);
+		updateCurrentEventStartTime();
 	}
-	timerRunning = false;
 }
 
 
-void LoLEventHandler::queueLoLEvent(std::string eventCategory, std::string eventName) {
+void LoLEventHandler::queueLoLEvent(std::string eventCategory, std::string eventName, bool forceAsCurrent) {
+	if (forceAsCurrent) {
+		updateCurrentEventStartTime();
+		std::queue<std::tuple<std::string, std::string>>().swap(eventQueue);
+		eventQueue.push({eventCategory, eventName});
+		onCurrentEventChanged(eventCategory, eventName);
+		return;
+	}
 	if (eventQueue.size() == 0) {
+		updateCurrentEventStartTime();
 		onCurrentEventChanged(eventCategory, eventName);
 	}
 	eventQueue.push({eventCategory, eventName});
@@ -79,9 +94,12 @@ LoLEventHandler::LoLEventHandler(Messages& _messages, HotkeyManager& _hotkeyMana
 	: messages(_messages), hotkeyManager(_hotkeyManager), chatSender(_chatSender), onCurrentEventChanged(_onCurrentEventChanged) {}
 
 
+double lastPlayerKillTime = -1000.0;
+int currentMultikillStreak = 0;
+int gameKillCount = 0;
+
 void LoLEventHandler::processLoLEvent(json lolEvent) {
 	std::string eventName = lolEvent["EventName"];
-
 	std::string localSummonerName = playersInfo.localPlayer;
 	auto isAmongAssisters = [&]() -> bool {
 		std::vector<std::string> assisters = lolEvent["Assisters"].get<std::vector<std::string>>();
@@ -95,30 +113,45 @@ void LoLEventHandler::processLoLEvent(json lolEvent) {
 
 	//GameStates
 	if (eventName == "GameStart") {
-		queueLoLEvent("GameState", "GameStart");
+		queueLoLEvent("Game State", "GameStart");
 		return;
 	} 
-	if (eventName == "GameEnd") {
-		queueLoLEvent("GameState", "GameEnd");
-		return;
-	}
     //Kills
 	if (eventName == "ChampionKill") {
+		gameKillCount++;
 		if (lolEvent["VictimName"].get<std::string>() == localSummonerName) {
 			queueLoLEvent("Kills", "Death");
 			return;
 		}
-		if (!(isKiller())) {
+		// Also avoid sending kill when it's first blood
+		if (!isKiller() || gameKillCount <= 1) {
 			return;
 		}
-		queueLoLEvent("Kills", "Kill");
+
+		double eventTime = lolEvent["EventTime"];
+		double timeSinceLastKill = eventTime - lastPlayerKillTime;
+    	bool extendsMultikill = (currentMultikillStreak < 4 && timeSinceLastKill <= 10.0) || (currentMultikillStreak == 4 && timeSinceLastKill <= 30.0);
+		
+		std::vector<std::string> assisters = lolEvent["Assisters"].get<std::vector<std::string>>();
+		
+		if (!extendsMultikill) {
+			currentMultikillStreak = 1;
+		}
+
+		if (assisters.size() > 0) {
+			queueLoLEvent("Kills", "Assisted Kill", true);
+		} else if (!extendsMultikill) {
+			queueLoLEvent("Kills", "Solo Kill", true);	
+		}
+
+		lastPlayerKillTime = eventTime;
 		return;
 	} 
 	if (eventName == "FirstBlood") {
 		if (lolEvent["Recipient"].get<std::string>() != localSummonerName) {
 			return;
 		}
-		queueLoLEvent("Kills", "FirstBlood");
+		queueLoLEvent("Kills", "First Blood", true);
 		return;
 	}
 	if (eventName == "Multikill") {
@@ -126,25 +159,27 @@ void LoLEventHandler::processLoLEvent(json lolEvent) {
 			return;
 		}
 		int killStreak = lolEvent["KillStreak"];
+		currentMultikillStreak = killStreak;
 		switch(killStreak) {
 			case 2:
-				queueLoLEvent("Kills", "DoubleKill");
+				queueLoLEvent("Kills", "Double Kill", true);
 				return;
 			case 3:
-				queueLoLEvent("Kills", "TripleKill");
+				queueLoLEvent("Kills", "Triple Kill", true);
 				return;
 			case 4:
-				queueLoLEvent("Kills", "QuadraKill");
+				queueLoLEvent("Kills", "Quadra Kill", true);
 				return;
 			case 5:
-				queueLoLEvent("Kills", "PentaKill");
+				queueLoLEvent("Kills", "Pentakill", true);
 				return;
 			default:
 				break;
 		}
 	}
 	if (eventName == "Ace" ) {
-		if (!(isKiller() || isAmongAssisters())) {
+		std::string acingTeam = lolEvent["AcingTeam"].get<std::string>();
+		if (acingTeam != playersInfo.localPlayerTeam) {
 			return;
 		}
 		queueLoLEvent("Kills", "Ace");
@@ -169,7 +204,14 @@ void LoLEventHandler::processLoLEvent(json lolEvent) {
 		if (!(isKiller() || isAmongAssisters())) {
 			return;
 		}
-		queueLoLEvent("Objectives", "VoidGrubs");
+		queueLoLEvent("Objectives", "Void Grubs");
+		return;	
+	}
+	if (eventName == "HeraldKill") {
+		if (!(isKiller() || isAmongAssisters())) {
+			return;
+		}
+		queueLoLEvent("Objectives", "Rift Herald");
 		return;
 	}
 	if (eventName == "AtakhanKill") {
@@ -198,7 +240,7 @@ void LoLEventHandler::processLoLEvent(json lolEvent) {
 		if (!(isKiller())) {
 			return;
 		}
-		queueLoLEvent("Structures", "FirstTurret");
+		queueLoLEvent("Structures", "First Turret");
 		return;
 	}
 }
