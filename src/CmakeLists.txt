@@ -12,13 +12,17 @@ add_executable(KeyboardWarriorLoLMod
     helpers/HTTPHelper.cpp
 )
 
+set_target_properties(KeyboardWarriorLoLMod PROPERTIES
+    WIN32_EXECUTABLE $<CONFIG:Release>
+)
+
 add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory
-        $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>/config
+        "$<TARGET_FILE_DIR:KeyboardWarriorLoLMod>/config"
 
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/config
-        $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>/config
+        "${CMAKE_SOURCE_DIR}/config"
+        "$<TARGET_FILE_DIR:KeyboardWarriorLoLMod>/config"
 )
 
 

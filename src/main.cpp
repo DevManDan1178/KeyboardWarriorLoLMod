@@ -136,7 +136,7 @@ int main() {
         InputReader::clearHotkeys();
         setOverlayVisible(true);
     };
-    
+
     auto onGameStart = [&]() {
         isIdle = false;
         setBorderless(window, hwnd, true);
@@ -242,4 +242,13 @@ int main() {
     SDL_Quit();
     lolReader.closeLoop();
     return 0;
+}
+
+int WINAPI WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow)
+{
+    return main();
 }

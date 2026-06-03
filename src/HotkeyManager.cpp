@@ -17,9 +17,33 @@
 using json = nlohmann::json;
 
 
+#include <windows.h>
+#include <filesystem>
+#include <string>
+
+static std::filesystem::path getExeDir()
+{
+    std::wstring buffer(32767, L'\0');
+
+    DWORD len = GetModuleFileNameW(
+        NULL,
+        buffer.data(),
+        static_cast<DWORD>(buffer.size())
+    );
+
+    if (len == 0)
+    {
+        return std::filesystem::current_path(); // fallback
+    }
+
+    buffer.resize(len);
+
+    return std::filesystem::path(buffer).parent_path();
+}
+
 static std::filesystem::path getConfigPath()
 {
-    return std::filesystem::current_path() / "config" / "hotkeys.json";
+    return getExeDir() / "config" / "hotkeys.json";
 }
 
 HotkeyManager::HotkeyManager(Messages& _messages)
