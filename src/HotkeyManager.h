@@ -10,9 +10,9 @@ enum class BindType {
 
 enum Modifiers {
     None = 0,
-    Ctrl = 1 << 0,
-    Shift = 1 << 1,
-    Alt = 1 << 2,
+    Shift = 1 << 0,
+    // Ctrl = 1 << 1,
+    // Alt = 1 << 2,
 };
 
 struct Hotkey {
@@ -29,17 +29,18 @@ struct Hotkey {
 
  
 class HotkeyManager {
-    public:        
+    public:       
+        const float maxEventHotkeyDuration = 15.0f;
+        const float minEventHotkeyDuration = 3.0f; 
         std::vector<Hotkey> eventHotkeys;
         std::vector<Hotkey> defaultHotkeys;
        
         Hotkey skipEventHotkey;
         float eventHotkeyDuration;
         Hotkey toggleInGameInteractableHotkey;
+        Hotkey toggleInGameAlwaysVisibleHotkey;
 
         Messages& messages;
-        
-       
         
         HotkeyManager(Messages& messages);
         
@@ -50,13 +51,13 @@ class HotkeyManager {
         bool setHotkey(Hotkey hotkey, bool isEventHotkey, int index);
         bool setSkipEventHotkey(Hotkey hotkey);
         bool setToggleInGameInteractableHotkey(Hotkey hotkey);
+        bool setToggleInGameAlwaysVisibleHotkey(Hotkey hotkey);
         bool removeHotkey(bool isEventHotkey, int index);
+        void setEventHotkeyDuration(float duration);
         static std::string hotkeyToString(const Hotkey& hotkey);
 
     private:
-        void handleHotkey(Hotkey keybind);
         void attemptWriteToJSON();
         bool writeToJSON();
-        static bool checkHotkeyIsInList(Hotkey hotkey, const std::vector<Hotkey> hotkeyList, int exceptForIndex = -1);
 };
 

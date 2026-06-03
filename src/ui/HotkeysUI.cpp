@@ -1,10 +1,13 @@
 
 #include "HotkeyManager.h"
 #include "imgui.h"
+#include <algorithm>
 #include <string>
 #include <format>
 #include <optional>
 
+const float SECTION_INDENT = 5.0f;
+const float CATEGORY_SELECTION_INDENT = 5.0f;
 const float CATEGORY_INDENT = 10.0f;
 const ImVec4 TEXT_COLOR = ImVec4(.95f, .95f, .95f, 1.0f);
 const ImVec4 FRAME_BG_COLOR = ImVec4(0.1f, 0.25f, 0.35f, 1.0f);
@@ -16,10 +19,12 @@ namespace HotkeysUI {
     bool eventsToggled = false;
     
     void hotkeysUI(HotkeyManager& hotkeyManager) {
-        ImGui::Text("-----  [Hotkeys]  -----");
+        ImGui::Text("--  [Message Hotkeys]  --");
+        ImGui::Indent(SECTION_INDENT);
         ImGui::Dummy(ImVec2(0, 4));
         //Defaults
         ImGui::Text("Default Hotkeys");
+        ImGui::Indent(CATEGORY_SELECTION_INDENT);
         ImGui::Dummy(ImVec2(0, 2));
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.5f, .5f, defaultsToggled ? 1.0f : .5f, 1.0f));
             
@@ -74,10 +79,12 @@ namespace HotkeysUI {
 
             ImGui::Unindent(CATEGORY_INDENT);
         }
-
+        ImGui::Unindent(CATEGORY_SELECTION_INDENT);
         //Events
+        ImGui::Dummy(ImVec2(0, 4));
         ImGui::Text("Event Hotkeys");
         ImGui::Dummy(ImVec2(0, 2));
+        ImGui::Indent(CATEGORY_SELECTION_INDENT);
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.5f, .5f, eventsToggled ? 1.0f : .5f, 1.0f));
             
         if (ImGui::Button(std::format("{} ##HotkeyEvents", eventsToggled ? "Hide" : "Show").c_str())) {
@@ -124,13 +131,13 @@ namespace HotkeysUI {
                 }
             }
 
-            ImGui::Dummy(ImVec2(0, 4));
+            ImGui::Dummy(ImVec2(0, 6));
             if (ImGui::Button("Create New Hotkey ##Events")) {
                 hotkeyManager.addHotkey(Hotkey(), true);
             }
 
             //SkipEvent hotkey
-            ImGui::Dummy(ImVec2(0, 2));
+            ImGui::Dummy(ImVec2(0, 4));
             ImGui::Text("Skip Event Hotkey");
             ImGui::Dummy(ImVec2(0, 2));
             {
@@ -152,24 +159,70 @@ namespace HotkeysUI {
 
             ImGui::Unindent(CATEGORY_INDENT);
         }
-
-        ImGui::Text("Toggle UI Interactable (In Game)");
+        ImGui::Unindent(SECTION_INDENT);
+        ImGui::Unindent(CATEGORY_SELECTION_INDENT);
+        ImGui::Dummy(ImVec2(0, 6));
+        ImGui::Text("-- [Mod Configurations] --");
+        ImGui::Indent(SECTION_INDENT);
+        ImGui::Dummy(ImVec2(0, 4));           
+        ImGui::Text("Toggle Interactable");
         ImGui::Dummy(ImVec2(0, 2));
-        static std::optional<Hotkey> failedChange;
-        std::string hotkeyStr = hotkeyManager.hotkeyToString(hotkeyManager.toggleInGameInteractableHotkey);
-        if (ImGui::Button(std::format("{} ##ToggleInGameInteractable", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr.c_str()).c_str())) {
-            Hotkey queriedHotkey = hotkeyManager.queryHotkey();
-            
-            bool success = hotkeyManager.setToggleInGameInteractableHotkey(queriedHotkey);
-            
-            if (!success) {
-                failedChange = queriedHotkey;
-            } else {
-                failedChange.reset();
+        {
+            static std::optional<Hotkey> failedChange;
+            std::string hotkeyStr = hotkeyManager.hotkeyToString(hotkeyManager.toggleInGameInteractableHotkey);
+            ImGui::Indent(CATEGORY_INDENT);
+            if (ImGui::Button(std::format("{} ##ToggleInGameInteractable", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr.c_str()).c_str())) {
+                Hotkey queriedHotkey = hotkeyManager.queryHotkey();
+                
+                bool success = hotkeyManager.setToggleInGameInteractableHotkey(queriedHotkey);
+                
+                if (!success) {
+                    failedChange = queriedHotkey;
+                } else {
+                    failedChange.reset();
+                }
             }
+            ImGui::Unindent(CATEGORY_INDENT);
         }
         ImGui::Dummy(ImVec2(0, 2));
+        ImGui::Text("Toggle Visibility: (On Event / Always)");
+        ImGui::Dummy(ImVec2(0, 2));
+        {
+            static std::optional<Hotkey> failedChange;
+            std::string hotkeyStr = hotkeyManager.hotkeyToString(hotkeyManager.toggleInGameAlwaysVisibleHotkey);
+            ImGui::Indent(CATEGORY_INDENT);
+            if (ImGui::Button(std::format("{} ##ToggleInGameInteractable", failedChange.has_value() ? hotkeyStr + " [cannot not change to " + hotkeyManager.hotkeyToString(failedChange.value()) + "]"  : hotkeyStr.c_str()).c_str())) {
+                Hotkey queriedHotkey = hotkeyManager.queryHotkey();
+                
+                bool success = hotkeyManager.setToggleInGameAlwaysVisibleHotkey(queriedHotkey);
+                
+                if (!success) {
+                    failedChange = queriedHotkey;
+                } else {
+                    failedChange.reset();
+                }
+            }
+            ImGui::Unindent(CATEGORY_INDENT);
+        }
+        ImGui::Dummy(ImVec2(0, 4));
+        ImGui::Text("Event Popup Duration");
+        ImGui::Dummy(ImVec2(0, 2));
+        ImGui::SetNextItemWidth(120.0f);
+        float& eventHotkeyDuration = hotkeyManager.eventHotkeyDuration;
+        ImGui::Indent(CATEGORY_INDENT);
+        ImGui::SliderFloat("[Ctrl + Click] for Manual Input##Event Popup Duration", &eventHotkeyDuration, hotkeyManager.minEventHotkeyDuration, hotkeyManager.maxEventHotkeyDuration, "%.1fs");
+        ImGui::Unindent(CATEGORY_INDENT);
+        eventHotkeyDuration = std::clamp(eventHotkeyDuration, hotkeyManager.minEventHotkeyDuration, hotkeyManager.maxEventHotkeyDuration);
+        if (!ImGui::IsItemActive()) {
+            hotkeyManager.setEventHotkeyDuration(eventHotkeyDuration);
+        }
+        
+
+        ImGui::Dummy(ImVec2(0, 2));
         ImGui::Text("Shift is treated as a hotkey modifier (and not as an individual hotkey)");
-        ImGui::Text("!! Alt and Ctrl are not supported as hotkey modifiers");
+        ImGui::Text("[!] Alt and Ctrl are not supported as hotkey modifiers [!]");
+        ImGui::Dummy(ImVec2(0, 4));
+        
+        ImGui::Unindent(SECTION_INDENT);
     }
 }

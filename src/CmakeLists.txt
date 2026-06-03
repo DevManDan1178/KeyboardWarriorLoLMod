@@ -12,13 +12,22 @@ add_executable(KeyboardWarriorLoLMod
     helpers/HTTPHelper.cpp
 )
 
+add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+        $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>/config
+
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/config
+        $<TARGET_FILE_DIR:KeyboardWarriorLoLMod>/config
+)
+
+
 target_link_libraries(KeyboardWarriorLoLMod PRIVATE
     SDL2::SDL2
     uiohook
     opengl32
 )
 
-# ImGui source files
 target_sources(KeyboardWarriorLoLMod PRIVATE
     ../external/imgui/imgui.cpp
     ../external/imgui/imgui_draw.cpp
@@ -38,7 +47,12 @@ target_include_directories(KeyboardWarriorLoLMod PRIVATE
     ../external/httplib
 )
 
-# Runtime DLL copy
+# ---- install exe ----
+install(TARGETS KeyboardWarriorLoLMod
+        RUNTIME DESTINATION bin)
+
+
+# ---- copy SDL DLL next to exe (dev convenience) ----
 add_custom_command(TARGET KeyboardWarriorLoLMod POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:SDL2::SDL2>

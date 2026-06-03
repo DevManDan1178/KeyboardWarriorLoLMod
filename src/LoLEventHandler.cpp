@@ -31,7 +31,6 @@ void LoLEventHandler::processHotkeyPressed(int hotkeyIndex, bool isEvent) {
 	auto [eventCategory, eventName] = getCurrentEvent();
 	std::vector<Message> messageList = isEvent ? messages.eventMessages[eventCategory][eventName] : messages.defaultMessages;
 	if (hotkeyIndex >= messageList.size()) {
-		std::cout << "message out of bounds for hotkey index " << hotkeyIndex << std::endl;
 		return;
 	}
 	std::string messageContent = messageList[hotkeyIndex].messageContent;
@@ -49,8 +48,7 @@ void LoLEventHandler::process() {
     }
 	
     if (!timerRunning) {
-        std::cout << "Displaying event - category: " << eventCategory << " - event name: " << eventName << std::endl;
-        currentEventStartTime = steady_clock::now();
+    	currentEventStartTime = steady_clock::now();
         timerRunning = true;
     }
 
@@ -63,18 +61,22 @@ void LoLEventHandler::process() {
 void LoLEventHandler::closeCurrentEvent() {
 	if (eventQueue.size() > 0) {
 		eventQueue.pop();
+		auto [eventCategory, eventName] = getCurrentEvent();
+		onCurrentEventChanged(eventCategory, eventName);
 	}
 	timerRunning = false;
 }
 
 
 void LoLEventHandler::queueLoLEvent(std::string eventCategory, std::string eventName) {
-	std::cout << "Event: " << eventCategory << " - " << eventName << std::endl;
+	if (eventQueue.size() == 0) {
+		onCurrentEventChanged(eventCategory, eventName);
+	}
 	eventQueue.push({eventCategory, eventName});
 }
 
-LoLEventHandler::LoLEventHandler(Messages& _messages, HotkeyManager& _hotkeyManager, ChatSender& _chatSender) 
-	: messages(_messages), hotkeyManager(_hotkeyManager), chatSender(_chatSender) {}
+LoLEventHandler::LoLEventHandler(Messages& _messages, HotkeyManager& _hotkeyManager, ChatSender& _chatSender, std::function<void(std::string, std::string)> &_onCurrentEventChanged) 
+	: messages(_messages), hotkeyManager(_hotkeyManager), chatSender(_chatSender), onCurrentEventChanged(_onCurrentEventChanged) {}
 
 
 void LoLEventHandler::processLoLEvent(json lolEvent) {

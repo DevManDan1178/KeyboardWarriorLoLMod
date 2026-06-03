@@ -48,21 +48,12 @@ uint8_t InputReader::currentModifiers()
     bool shift = s_shift || (GetAsyncKeyState(VK_SHIFT) & 0x8000);
     bool alt   = s_alt   || (GetAsyncKeyState(VK_MENU) & 0x8000);
 
-    if (ctrl)  mods |= Modifiers::Ctrl;
-    if (shift) mods |= Modifiers::Shift;
-    if (alt)   mods |= Modifiers::Alt;
+    //if (ctrl)  mods |= Modifiers::Ctrl;
+    if (shift) {
+        mods |= Modifiers::Shift;
+    } 
+    //if (alt)   mods |= Modifiers::Alt;
 
-    /*
-    if (DEBUG_INPUT)
-    {
-        std::cout << "[MOD STATE] Ctrl=" << ctrl
-                  << " Shift=" << shift
-                  << " Alt=" << alt
-                  << " (raw ctrl=" << s_ctrl
-                  << ", shift=" << s_shift
-                  << ", alt=" << s_alt << ")\n";
-    }
-    */
     return mods;
 }
 
@@ -213,7 +204,6 @@ void InputReader::dispatch(uiohook_event* event) {
 }
 
 // ---------------- Hook lifecycle ----------------
-
 bool InputReader::start()
 {
     hook_set_dispatch_proc(dispatch);
@@ -237,9 +227,6 @@ void InputReader::stop()
 
 void InputReader::onHotkey(const Hotkey& hotkey, HotkeyCallback callback)
 {
-    std::cout << "[REGISTER] key=" << hotkey.keyCode
-              << " modifiers=" << (int)hotkey.modifiers << "\n";
-
     s_bindings.push_back({ hotkey, std::move(callback) });
 }
 

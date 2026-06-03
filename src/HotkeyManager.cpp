@@ -16,8 +16,11 @@
 
 using json = nlohmann::json;
 
-const std::filesystem::path path = std::filesystem::current_path() / "config/hotkeys.json";
 
+static std::filesystem::path getConfigPath()
+{
+    return std::filesystem::current_path() / "config" / "hotkeys.json";
+}
 
 HotkeyManager::HotkeyManager(Messages& _messages)
 : messages(_messages) {}
@@ -43,9 +46,9 @@ static json hotkeyToJson(const Hotkey& hotkey) {
 }
 
 bool HotkeyManager::load() {
-    std::ifstream file(path);
+    std::ifstream file(getConfigPath());
     if (!file.is_open()) {
-        std::cout << "Failed to open file at path " << path << std::endl;
+        std::cout << "Failed to open file at path " << getConfigPath() << std::endl;
         return false;
     }
     
@@ -71,12 +74,13 @@ bool HotkeyManager::load() {
 
 
     float _eventHotkeyDuration = hotkeysData["EventHotkeyDuration"];
-    std::cout << _eventHotkeyDuration << std::endl;
+    eventHotkeyDuration = _eventHotkeyDuration;
 
     Hotkey _toggleInGameInteractableHotkey = parseHotkeyData(hotkeysData["ToggleInGameInteractable"]);
     toggleInGameInteractableHotkey = _toggleInGameInteractableHotkey;
 
-    eventHotkeyDuration = _eventHotkeyDuration;
+    Hotkey _toggleInGameAlwaysVisibleHotkey = parseHotkeyData(hotkeysData["ToggleInGameAlwaysVisible"]);
+    toggleInGameAlwaysVisibleHotkey = _toggleInGameAlwaysVisibleHotkey;
 
     return true;
 }
@@ -90,6 +94,12 @@ void HotkeyManager::attemptWriteToJSON() {
 
 bool HotkeyManager::writeToJSON() {
     try {
+        std::ofstream file(getConfigPath());
+        if (!file.is_open()) {
+            std::cout << "Failed to open file for writing: " << getConfigPath() << std::endl;
+            return false;
+        }
+
         json hotkeysData;
 
         // Defaults
@@ -107,12 +117,7 @@ bool HotkeyManager::writeToJSON() {
         hotkeysData["SkipEvent"] = hotkeyToJson(skipEventHotkey);     
         hotkeysData["ToggleInGameInteractable"] = hotkeyToJson(toggleInGameInteractableHotkey);
         hotkeysData["EventHotkeyDuration"] = eventHotkeyDuration;
-
-        std::ofstream file(path);
-        if (!file.is_open()) {
-            std::cout << "Failed to open file for writing: " << path << std::endl;
-            return false;
-        }
+        hotkeysData["ToggleInGameAlwaysVisible"] = hotkeyToJson(toggleInGameAlwaysVisibleHotkey);
 
         file << hotkeysData.dump(4); // pretty-print with 4-space indentation
         return true;
@@ -123,11 +128,17 @@ bool HotkeyManager::writeToJSON() {
     }
 }
 
+void HotkeyManager::setEventHotkeyDuration(float duration) {
+    eventHotkeyDuration = std::round(std::clamp(duration, minEventHotkeyDuration, maxEventHotkeyDuration) * 10.0f) * 0.1f;
+    attemptWriteToJSON();
+    return;
+}
+
 static bool checkHotkeysEqual(Hotkey hotkey, Hotkey otherHotkey) {
     return hotkey.bindType == otherHotkey.bindType && hotkey.keyCode == otherHotkey.keyCode && hotkey.modifiers == otherHotkey.modifiers;
 }
 
-bool HotkeyManager::checkHotkeyIsInList(Hotkey hotkey, const std::vector<Hotkey> hotkeyList, int exceptForIndex) {
+static bool checkHotkeyIsInList(Hotkey hotkey, const std::vector<Hotkey> hotkeyList, int exceptForIndex = -1) {
     for (int i = 0; i < hotkeyList.size(); i++) {
         if (i != exceptForIndex && checkHotkeysEqual(hotkey, hotkeyList[i])) {
             return true;
@@ -153,7 +164,8 @@ bool HotkeyManager::setHotkey(Hotkey hotkey, bool isEventHotkey, int index) {
 
 bool HotkeyManager::addHotkey(Hotkey hotkey, bool isEventHotkey) {
     std::vector<Hotkey> &hotkeyList = isEventHotkey ? eventHotkeys : defaultHotkeys;
-    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys) || checkHotkeysEqual(hotkey, skipEventHotkey) || checkHotkeysEqual(hotkey, toggleInGameInteractableHotkey)) {
+    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys) 
+    || checkHotkeysEqual(hotkey, skipEventHotkey) || checkHotkeysEqual(hotkey, toggleInGameInteractableHotkey)) {
         std::cout << "Attempt to add an already existing hotkey" << std::endl;
         return false;
     }
@@ -174,7 +186,8 @@ bool HotkeyManager::removeHotkey(bool isEventHotkey, int index) {
 }
 
 bool HotkeyManager::setSkipEventHotkey(Hotkey hotkey) {
-    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys) || checkHotkeysEqual(hotkey, toggleInGameInteractableHotkey)) {
+    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys) 
+    || checkHotkeysEqual(hotkey, toggleInGameInteractableHotkey) ||checkHotkeysEqual(hotkey, toggleInGameAlwaysVisibleHotkey)) {
         std::cout << "Attempt to set an already existing hotkey to SkipEvent" << std::endl;
         return false;
     }
@@ -184,7 +197,8 @@ bool HotkeyManager::setSkipEventHotkey(Hotkey hotkey) {
 }
 
 bool HotkeyManager::setToggleInGameInteractableHotkey(Hotkey hotkey) {
-    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys) || checkHotkeysEqual(hotkey, skipEventHotkey)) {
+    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys) 
+    || checkHotkeysEqual(hotkey, skipEventHotkey) || checkHotkeysEqual(hotkey, toggleInGameAlwaysVisibleHotkey)) {
         std::cout << "Attempt to set an already existing hotkey to ToggleInGameInteractable" << std::endl;
         return false;
     }
@@ -193,9 +207,17 @@ bool HotkeyManager::setToggleInGameInteractableHotkey(Hotkey hotkey) {
     return true;
 }
 
-void HotkeyManager::handleHotkey(Hotkey keybind) {
-    // TODO ChatSender usage
+bool HotkeyManager::setToggleInGameAlwaysVisibleHotkey(Hotkey hotkey) {
+    if (checkHotkeyIsInList(hotkey, eventHotkeys) || checkHotkeyIsInList(hotkey, defaultHotkeys)
+    || checkHotkeysEqual(hotkey, skipEventHotkey) || checkHotkeysEqual(hotkey, toggleInGameInteractableHotkey)) {
+        std::cout << "Attempt to set an already existing hotkey to ToggleInGameAlwaysVisible" << std::endl;
+        return false;
+    }
+    toggleInGameAlwaysVisibleHotkey = hotkey;
+    attemptWriteToJSON();
+    return true;
 }
+
 
 
 static int SDLToUiohook(SDL_Scancode sc)
@@ -258,6 +280,15 @@ static int SDLToUiohook(SDL_Scancode sc)
         case SDL_SCANCODE_F11: return VC_F11;
         case SDL_SCANCODE_F12: return VC_F12;
 
+        case SDL_SCANCODE_SEMICOLON: return VC_SEMICOLON;
+        case SDL_SCANCODE_APOSTROPHE: return VC_QUOTE;
+        case SDL_SCANCODE_COMMA: return VC_COMMA;
+        case SDL_SCANCODE_PERIOD: return VC_PERIOD;
+        case SDL_SCANCODE_SLASH: return VC_SLASH;
+        case SDL_SCANCODE_BACKSLASH: return VC_BACK_SLASH;
+        case SDL_SCANCODE_LEFTBRACKET: return VC_OPEN_BRACKET;
+        case SDL_SCANCODE_RIGHTBRACKET: return VC_CLOSE_BRACKET;
+        case SDL_SCANCODE_GRAVE: return VC_BACKQUOTE;
         default:
             return VC_UNDEFINED;
     }
@@ -279,11 +310,10 @@ Hotkey HotkeyManager::queryHotkey()
     {
         while (SDL_PollEvent(&event))
         {
-            // ----------------------------
             // Keyboard
-            // ----------------------------
             if (event.type == SDL_KEYDOWN)
             {
+                
                 SDL_Scancode sc = event.key.keysym.scancode;
 
                 // Ignore modifier keys
@@ -296,6 +326,7 @@ Hotkey HotkeyManager::queryHotkey()
                 }
 
                 int key = SDLToUiohook(sc);
+                std::cout << "KEY: " << SDL_GetScancodeName(sc) << std::endl;
                 if (key == VC_UNDEFINED) {
                     continue;
                 }
@@ -304,19 +335,18 @@ Hotkey HotkeyManager::queryHotkey()
                 uint8_t mods = 0;
                 SDL_Keymod sdlMods = SDL_GetModState();
 
-                if (sdlMods & KMOD_CTRL)  mods |= Modifiers::Ctrl;
-                if (sdlMods & KMOD_SHIFT) mods |= Modifiers::Shift;
-                if (sdlMods & KMOD_ALT)   mods |= Modifiers::Alt;
+                //if (sdlMods & KMOD_CTRL)  mods |= Modifiers::Ctrl;
+                if (sdlMods & KMOD_SHIFT){
+                    mods |= Modifiers::Shift;
+                } 
+                //if (sdlMods & KMOD_ALT)   mods |= Modifiers::Alt;
 
                 return { key, BindType::Keyboard, mods };
             }
 
-            // ----------------------------
             // Mouse
-            // ----------------------------
             if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                // Ignore left and right mouse buttons
                 if (event.button.button == SDL_BUTTON_LEFT ||
                     event.button.button == SDL_BUTTON_RIGHT)
                 {
@@ -326,16 +356,16 @@ Hotkey HotkeyManager::queryHotkey()
                 uint8_t mods = 0;
                 SDL_Keymod sdlMods = SDL_GetModState();
 
-                if (sdlMods & KMOD_CTRL)  mods |= Modifiers::Ctrl;
-                if (sdlMods & KMOD_SHIFT) mods |= Modifiers::Shift;
-                if (sdlMods & KMOD_ALT)   mods |= Modifiers::Alt;
+                //if (sdlMods & KMOD_CTRL)  mods |= Modifiers::Ctrl;
+                if (sdlMods & KMOD_SHIFT) {
+                    mods |= Modifiers::Shift;
+                } 
+                //if (sdlMods & KMOD_ALT)   mods |= Modifiers::Alt;
 
                 return { (int)event.button.button, BindType::Mouse, mods };
             }
 
-            // ----------------------------
             // Quit
-            // ----------------------------
             if (event.type == SDL_QUIT)
             {
                 return { -1, BindType::None, 0 };
@@ -351,16 +381,14 @@ std::string HotkeyManager::hotkeyToString(const Hotkey& hotkey)
 {
     std::stringstream ss;
 
-    // -------------------------
     // Modifiers
-    // -------------------------
-    if (hotkey.modifiers & Modifiers::Ctrl)  ss << "Ctrl+";
-    if (hotkey.modifiers & Modifiers::Shift) ss << "Shift+";
-    if (hotkey.modifiers & Modifiers::Alt)   ss << "Alt+";
+    //if (hotkey.modifiers & Modifiers::Ctrl)  ss << "Ctrl+";
+    if (hotkey.modifiers & Modifiers::Shift) {
+        ss << "Shift + ";
+    } 
+    //if (hotkey.modifiers & Modifiers::Alt)   ss << "Alt+";
 
-    // -------------------------
     // Keyboard (uiohook codes)
-    // -------------------------
     if (hotkey.bindType == BindType::Keyboard)
     {
         switch (hotkey.keyCode)
@@ -434,14 +462,21 @@ std::string HotkeyManager::hotkeyToString(const Hotkey& hotkey)
             case VC_LEFT:  ss << "Left"; break;
             case VC_RIGHT: ss << "Right"; break;
 
+            case VC_SEMICOLON:     ss << ";"; break;
+            case VC_QUOTE:         ss << "'"; break;
+            case VC_BACK_SLASH:    ss << "\\"; break;
+            case VC_OPEN_BRACKET:  ss << "["; break;
+            case VC_CLOSE_BRACKET: ss << "]"; break;
+            case VC_COMMA:         ss << ","; break;
+            case VC_PERIOD:        ss << "."; break;
+            case VC_SLASH:         ss << "/"; break;
+            case VC_BACKQUOTE:     ss << "`"; break;
             default:
                 ss << "Key" << hotkey.keyCode;
                 break;
         }
     }
-    // -------------------------
     // Mouse
-    // -------------------------
     else if (hotkey.bindType == BindType::Mouse)
     {
         switch (hotkey.keyCode)

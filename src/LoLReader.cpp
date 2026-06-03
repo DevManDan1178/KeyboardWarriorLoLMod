@@ -215,12 +215,11 @@ void LoLReader::coreLoop() {
                 std::this_thread::sleep_for(std::chrono::milliseconds(LOADING_TIME_BETWEEN_CHECKS));
             }
         } else {
-            std::cout << "is idle" << std::endl;
             isIdle = true;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(IDLE_TIME_BETWEEN_CHECKS));
     }
-    std::cout << "Core Loop over" << std::endl;
+    std::cout << "Core loop closed" << std::endl;
 }
 
 void LoLReader::closeLoop() {

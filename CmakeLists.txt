@@ -6,10 +6,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
-# Dependencies
+# ---- set install prefix early (important) ----
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "" FORCE)
+endif()
 
+# ---- install config files ----
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/config/
+        DESTINATION share/KeyboardWarriorLoLMod/config)
+
+# ---- dependencies ----
 add_subdirectory(external/SDL)
 add_subdirectory(external/libuiohook)
 add_subdirectory(src)
-
-

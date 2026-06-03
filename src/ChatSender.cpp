@@ -48,8 +48,7 @@ void ChatSender::sendUnicodeChar(wchar_t ch)
 
 void ChatSender::sendMessage(const std::string& msg)
 {
-    std::cout <<  "[ChatSender]: " << msg << std::endl;
-    // Open chat (Enter)
+     // Open chat (Enter)
     sendKey(VK_RETURN);
     sleep_ms(1);
 
@@ -73,10 +72,10 @@ void ChatSender::sendMessage(const std::string& msg)
     for (wchar_t ch : wmsg)
     {
         sendUnicodeChar(ch);
-        sleep_ms(1);
+    sleep_ms(1);
     }
 
-    sleep_ms(5);
+    sleep_ms(1);
             
     // Send message (Enter)
     sendKey(VK_RETURN);

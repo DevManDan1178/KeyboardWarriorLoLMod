@@ -33,6 +33,15 @@ void setClickThrough(HWND hwnd, bool clickThrough) {
     SetWindowLongPtr(hwnd, GWL_EXSTYLE, exStyle);
 }
 
+void setBorderless(SDL_Window* window, HWND hwnd, bool borderless)
+{
+    SDL_SetWindowBordered(window, borderless ? SDL_FALSE : SDL_TRUE);
+
+    // force Windows to apply the style change
+    SetWindowPos(hwnd, nullptr, 0, 0, 0, 0,
+        SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+}
+
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
         std::cout << "SDL Init failed: " << SDL_GetError() << std::endl;
@@ -49,7 +58,7 @@ int main() {
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         600, 600,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_BORDERLESS
+        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
     );
 
     SDL_SysWMinfo wmInfo{};
@@ -89,35 +98,62 @@ int main() {
     bool running          = true;
     bool isIdle           = true;
     bool clickThrough     = true; // tracks current click-through state during game
+    bool overlayVisible   = true; // tracks if the overlay is being toggled to visible
+    bool visibleAlways    = true;
+
+    auto setOverlayVisible = [&](bool visible) {
+        if (overlayVisible == visible) {
+            return;
+        }
+        overlayVisible = visible;
+        ShowWindow(hwnd, overlayVisible ? SW_SHOW : SW_HIDE);
+    };
+
+    std::function<void(std::string, std::string)> displayEventChange = [&](std::string eventCategory, std::string eventName) {
+        if (eventCategory.empty()  || eventName.empty()) {
+            if (!visibleAlways) {
+                setOverlayVisible(false);
+                return;
+            }
+            SDL_SetWindowSize(window, 400, CoreUI::getEventOverlayUIFrameHeight(messages.defaultMessages.size(), 0));
+            return;
+        }
+        setOverlayVisible(true);
+        SDL_SetWindowSize(window, 400, CoreUI::getEventOverlayUIFrameHeight(messages.defaultMessages.size(), messages.eventMessages[eventCategory][eventName].size()));
+    };
+
     ChatSender chatSender = ChatSender();
-    LoLEventHandler lolEventHandler = LoLEventHandler(messages, hotkeyManager, chatSender);
+    LoLEventHandler lolEventHandler = LoLEventHandler(messages, hotkeyManager, chatSender, displayEventChange);
     LoLReader lolReader = LoLReader(lolEventHandler);
 
-    InputReader::start();
-    lolReader.initializeLoop();
 
     auto onIdle = [&]() {
         isIdle = true;
+        setBorderless(window, hwnd, false);
         SDL_SetWindowSize(window, 600, 600);
         setClickThrough(hwnd, false);
         SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
         InputReader::clearHotkeys();
+        setOverlayVisible(true);
     };
-
+    
     auto onGameStart = [&]() {
         isIdle = false;
-        clickThrough = true; // start in click-through mode
-        SDL_SetWindowSize(window, 400, 200);
+        setBorderless(window, hwnd, true);
+        
+        clickThrough = true; // Start in clickThrough mode (initially non interactable)
+        auto [eventCategory, eventName] = lolEventHandler.getCurrentEvent();
+        displayEventChange(eventCategory, eventName);
+
         SetLayeredWindowAttributes(hwnd, 0, 175, LWA_ALPHA);
         setClickThrough(hwnd, true);
-
+        SDL_RestoreWindow(window);
         InputReader::clearHotkeys();
 
         // Default message hotkeys
         for (int i = 0; i < (int)hotkeyManager.defaultHotkeys.size(); i++) {
             Hotkey hotkey = hotkeyManager.defaultHotkeys[i];
             InputReader::onHotkey(hotkey, [&lolEventHandler, i]() {
-                std::cout << "hotkey pressed for default message " << std::endl;
                 lolEventHandler.processHotkeyPressed(i, false);
             });
         }
@@ -130,6 +166,7 @@ int main() {
             });
         }
 
+        //Skip Event
         InputReader::onHotkey(hotkeyManager.skipEventHotkey, [&]() {
             lolEventHandler.closeCurrentEvent();
         });
@@ -149,8 +186,23 @@ int main() {
             clickThrough = true;
             setClickThrough(hwnd, true);
         });
+
+
+        //Toggle visible
+        InputReader::onHotkey(hotkeyManager.toggleInGameAlwaysVisibleHotkey, [&]() {
+            visibleAlways = !visibleAlways;
+            if (visibleAlways) {
+                setOverlayVisible(true);
+            } else {
+                auto [eventCategory, eventName] = lolEventHandler.getCurrentEvent();
+                displayEventChange(eventCategory, eventName);
+            }
+        });
     };
 
+    InputReader::start();
+    lolReader.initializeLoop();
+    
     SDL_Event event;
     while (running) {
         lolReader.process();
@@ -177,7 +229,7 @@ int main() {
         } else {
             if (isIdle)
                 onGameStart(); 
-            CoreUI::eventsOverlayUIFrame(window, hwnd, lolEventHandler, messages, hotkeyManager, !clickThrough);
+            CoreUI::eventsOverlayUIFrame(window, hwnd, lolEventHandler, messages, hotkeyManager, !clickThrough, visibleAlways);
         }
     }
 

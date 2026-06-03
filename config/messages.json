@@ -1,56 +1,16 @@
 {
-    "Defaults": [
-        {
-            "Content": "Zimi c un challenger player il est tro op.",
-            "Title": "Zimi"
-        }
-    ],
+    "Defaults": [],
     "Events": {
         "GameState": {
-            "GameEnd": [
-                {
-                    "Content": "",
-                    "Title": "Title"
-                },
-                {
-                    "Content": "",
-                    "Title": "yes"
-                }
-            ],
-            "GameStart": [
-                {
-                    "Content": "I am rank 1 Yuumi. Y'all stand no chance so just FF please.",
-                    "Title": "Rank 1 Yuumi announcement"
-                }
-            ]
+            "GameStart": []
         },
         "Kills": {
-            "Ace": [
-                {
-                    "Content": "",
-                    "Title": "True Message"
-                }
-            ],
+            "Ace": [],
             "Death": [],
-            "DoubleKill": [
-                {
-                    "Content": "Epic Zimi double kill",
-                    "Title": "Double Kill 1"
-                }
-            ],
-            "FirstBlood": [
-                {
-                    "Content": "",
-                    "Title": "True Message"
-                }
-            ],
+            "DoubleKill": [],
+            "FirstBlood": [],
             "Kill": [],
-            "PentaKill": [
-                {
-                    "Content": "",
-                    "Title": "True Message"
-                }
-            ],
+            "PentaKill": [],
             "QuadraKill": [],
             "TripleKill": []
         },
@@ -69,8 +29,7 @@
     },
     "EventsKeyOrder": {
         "GameState": [
-            "GameStart",
-            "GameEnd"
+            "GameStart"
         ],
         "Kills": [
             "FirstBlood",

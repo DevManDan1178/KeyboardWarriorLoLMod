@@ -10,11 +10,16 @@
 #include <tuple>
 #include "imgui.h"
 
+const float SECTION_INDENT = 5.0f;
+const float CATEGORY_SELECTION_INDENT = 5.0f;
 const float CATEGORY_INDENT = 10.0f;
 const float EVENT_INDENT = 10.0f;
 const float MESSAGE_TEXT_DISPLAY_MAX_WIDTH = 450.0f;
 const ImVec4 TEXT_COLOR = ImVec4(.95f, .95f, .95f, 1.0f);
 const ImVec4 FRAME_BG_COLOR = ImVec4(0.1f, 0.25f, 0.35f, 1.0f);
+
+const std::string DEFAULT_NEW_MESSAGE_CONTENT = "Good Game";
+const std::string DEFAULT_NEW_MESSAGE_TITLE = "GG";
 
 namespace MessagesUI {
 
@@ -40,11 +45,14 @@ namespace MessagesUI {
         static std::tuple<int, int> editedObject(-1, -1);
         static std::map<int, std::vector<MessageBuffer>> messageBuffersMap;
 
-        ImGui::Text("----- [Messages] -----");
+        ImGui::Text("-  [Message Hotkeys]  -");
+        ImGui::Indent(SECTION_INDENT);
         std::vector<Message> defaultMessagesList = messages.defaultMessages;
+        
         //Default Messages
         ImGui::Dummy(ImVec2(0, 4));
         ImGui::Text("Default Messages");
+        ImGui::Indent(CATEGORY_SELECTION_INDENT);
         ImGui::Dummy(ImVec2(0, 2));
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.5f, .5f, defaultsToggled ? 1.0f : .5f, 1.0f));
             
@@ -168,24 +176,25 @@ namespace MessagesUI {
             }
              
             if (ImGui::Button("Create New Message##Defaults")) {
-                messages.createNewDefaultMessage(Message("I am rank 1 Yuumi player", "True Message"));
+                messages.createNewDefaultMessage(Message(DEFAULT_NEW_MESSAGE_CONTENT, DEFAULT_NEW_MESSAGE_TITLE));
             }
             ImGui::Unindent(CATEGORY_INDENT);
         }
+
+        ImGui::Unindent(CATEGORY_SELECTION_INDENT);
         //EVENT MESSAGES
 
         ImGui::Dummy(ImVec2(0, 4));
         ImGui::Text("Event Messages");
         ImGui::Dummy(ImVec2(0, 2));
+        ImGui::Indent(CATEGORY_SELECTION_INDENT);
+
         for (const auto& pairCategoryEventMessages : eventMessages) {  
-            categoryIdx++;
-            
+            categoryIdx++; 
             std::string category = pairCategoryEventMessages.first;
-            std::unordered_map<std::string, std::vector<Message>> eventMessages = pairCategoryEventMessages.second;
             
             bool categoryVisibilityToggled = categoryToggleStates & (1 << categoryIdx);
-            
-            
+                    
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.5f, .5f, categoryVisibilityToggled ? 1.0f : .5f, 1.0f));
             
             if (ImGui::Button(std::format("{}##categoryToggle{}", category.c_str(), category).c_str())) {
@@ -220,10 +229,11 @@ namespace MessagesUI {
                 if (!eventVisibilityToggled) {
                     continue;
                 }
+
                 ImGui::Indent(EVENT_INDENT);
                 
                 ImGui::Dummy(ImVec2(0, 4));
-                std::vector<Message> messageList = messages.eventMessages[category][event];
+                std::vector<Message> messageList = eventMessages[category][event];
 
                 std::vector<MessageBuffer> eventMessageBuffers = messageBuffersMap[eventIdx]; 
 
@@ -350,9 +360,10 @@ namespace MessagesUI {
                 ImGui::Unindent(EVENT_INDENT);
                 ImGui::Dummy(ImVec2(0, 4));
             }
-            ImGui::Unindent(CATEGORY_INDENT);
+            ImGui::Unindent(CATEGORY_INDENT);       
             ImGui::Dummy(ImVec2(0, 4));
         }
-        
+        ImGui::Unindent(SECTION_INDENT);
+        ImGui::Unindent(CATEGORY_SELECTION_INDENT);
     }
 }

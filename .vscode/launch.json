@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run KeyboardWarriorLoLMod",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/src/Debug/KeyboardWarriorLoLMod.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build/src/Debug",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb"
+    }
+  ]
+}

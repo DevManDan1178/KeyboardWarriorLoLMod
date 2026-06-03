@@ -8,6 +8,7 @@
 #include <variant>
 #include "LoLTypes.h"
 #include "ChatSender.h"
+#include <functional>
 #include <queue>
 #include <tuple>
 #include <chrono>
@@ -23,10 +24,13 @@ class LoLEventHandler {
         HotkeyManager &hotkeyManager;
         LoLPlayersInfo playersInfo;
         ChatSender &chatSender;
+        std::function<void(std::string, std::string)> &onCurrentEventChanged;
+
         bool timerRunning;
         std::chrono::steady_clock::time_point currentEventStartTime;
 
-        LoLEventHandler(Messages &_messages, HotkeyManager &_hotkeyManager, ChatSender &_chatSender);
+
+        LoLEventHandler(Messages &_messages, HotkeyManager &_hotkeyManager, ChatSender &_chatSender, std::function<void(std::string, std::string)> &_onCurrentEventChanged);
         void processLoLEvent(json LoLEvent);
         
         void closeCurrentEvent();
@@ -35,7 +39,7 @@ class LoLEventHandler {
         void processHotkeyPressed(int hotkeyIndex, bool isEvent);
 
         std::tuple<std::string, std::string> getCurrentEvent();
-    private:
+    private:   
         void queueLoLEvent(std::string eventCategory, std::string eventName);
         void printPlayersInfo();
 };

@@ -6,7 +6,10 @@
 
 using json = nlohmann::json;
 
-const std::filesystem::path path = std::filesystem::current_path() / "config/messages.json";
+static std::filesystem::path getConfigPath()
+{
+    return std::filesystem::current_path() / "config" / "messages.json";
+}
 
 static Message parseMessageData(json messageData) {
     return Message(messageData.value("Content", ""), messageData.value("Title", ""));
@@ -20,9 +23,9 @@ static json messageToJSON(Message message) {
 }
 
 bool Messages::load() {
-    std::ifstream file(path);
+    std::ifstream file(getConfigPath());
     if (!file.is_open()) {
-        std::cout << "Failed to open file at path " << path << std::endl;
+        std::cout << "Failed to open file at path " << getConfigPath() << std::endl;
         return false;
     }
     
@@ -96,11 +99,11 @@ bool Messages::writeToJSON()
         }
     }
 
-    std::ofstream file(path);
+    std::ofstream file(getConfigPath());
     if (!file.is_open())
     {
         std::cout << "Failed to open file for writing at path "
-                  << path << std::endl;
+                  << getConfigPath() << std::endl;
         return false;
     }
 
@@ -109,7 +112,7 @@ bool Messages::writeToJSON()
     if (file.fail())
     {
         std::cout << "Failed while writing JSON to "
-                  << path << std::endl;
+                  << getConfigPath() << std::endl;
         return false;
     }
     return true;
