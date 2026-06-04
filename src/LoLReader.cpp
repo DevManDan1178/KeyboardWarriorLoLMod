@@ -10,7 +10,7 @@ using json = nlohmann::json;
 
 const int IDLE_TIME_BETWEEN_CHECKS = 2000; //Milliseconds
 const int LOADING_TIME_BETWEEN_CHECKS = 500; //Milliseconds
-const int TIME_BETWEEN_EVENT_LOOP = 1000; //Milliseconds [150]
+const int TIME_BETWEEN_EVENT_LOOP = 100; //Milliseconds [100]
 
 
 void LoLReader::stopCoreLoop(){
@@ -213,6 +213,7 @@ void LoLReader::coreLoop() {
 
                 isInGame = true;
                 liveClientEventLoop();
+                lolEventHandler.reset();
             } else {
                 std::this_thread::sleep_for(std::chrono::milliseconds(LOADING_TIME_BETWEEN_CHECKS));
             }

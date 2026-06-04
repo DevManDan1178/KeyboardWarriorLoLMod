@@ -118,6 +118,15 @@ double lastPlayerKillTime = -1000.0;
 int currentMultikillStreak = 0;
 int gameKillCount = 0;
 
+void LoLEventHandler::reset() {
+	while (!eventQueue.empty()) {
+		eventQueue.pop();
+	}
+	gameKillCount = 0;
+	currentMultikillStreak = 0;
+	lastPlayerKillTime = -1000.0;
+}
+	
 void LoLEventHandler::processLoLEvent(json lolEvent) {
 	std::string eventName = lolEvent["EventName"];
 	std::string localSummonerName = playersInfo.localPlayer;
@@ -133,7 +142,7 @@ void LoLEventHandler::processLoLEvent(json lolEvent) {
 
 	//GameStates
 	if (eventName == "GameStart") {
-		queueLoLEvent("Game State", "GameStart");
+		queueLoLEvent("GameState", "Game Start");
 		return;
 	} 
     //Kills

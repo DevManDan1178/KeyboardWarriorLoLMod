@@ -37,6 +37,8 @@ class LoLEventHandler {
 
         void processHotkeyPressed(int hotkeyIndex, bool isEvent);
         float getHotkeyExpirationProgress();
+        void reset();
+
         std::tuple<std::string, std::string> getCurrentEvent();
         std::tuple<std::string, std::string> getNextEvent();
     private:   

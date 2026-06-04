@@ -352,7 +352,7 @@ namespace MessagesUI {
                 
                 
                 if (ImGui::Button(std::format("Create New Message##{}{}", category, eventIdx).c_str())) {
-                    messages.createNewEventMessage(category, event, Message("I am rank 1 Yuumi player", "True Message"));
+                    messages.createNewEventMessage(category, event, Message(DEFAULT_NEW_MESSAGE_CONTENT, DEFAULT_NEW_MESSAGE_TITLE));
                 }
 
                 ImGui::PopStyleColor(2);
