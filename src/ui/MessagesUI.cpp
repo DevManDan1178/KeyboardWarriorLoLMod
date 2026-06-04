@@ -45,7 +45,7 @@ namespace MessagesUI {
         static std::tuple<int, int> editedObject(-1, -1);
         static std::map<int, std::vector<MessageBuffer>> messageBuffersMap;
 
-        ImGui::Text("-  [Message Hotkeys]  -");
+        ImGui::Text("--  [Message Hotkeys]  --");
         ImGui::Indent(SECTION_INDENT);
         std::vector<Message> defaultMessagesList = messages.defaultMessages;
         
