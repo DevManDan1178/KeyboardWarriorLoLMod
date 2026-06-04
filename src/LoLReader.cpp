@@ -102,9 +102,8 @@ std::tuple<bool, LoLPlayersInfo> LoLReader::getPlayersInfo()
 void LoLReader::liveClientEventLoop()
 {
     int currentEventId = -1;
-    bool gameEndDetected = false;
     
-    while (running && !gameEndDetected) {
+    while (running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(TIME_BETWEEN_EVENT_LOOP));
         
         //Gets all event with id >= lastEventId
@@ -137,8 +136,7 @@ void LoLReader::liveClientEventLoop()
                         continue;
                     }
                     if (event["EventName"].get<std::string>() == "GameEnd") {
-                        gameEndDetected = true;
-                        break;
+                        return;
                     }
 
                     int id = event["EventID"];
