@@ -4,6 +4,8 @@
 #include <iostream>
 #include <thread>
 
+const int PRE_CHAT_BACKSPACE_COUNT = 5; //In case shift is used, which starts message with /All 
+
 static void sleep_ms(int ms)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
@@ -48,9 +50,17 @@ void ChatSender::sendUnicodeChar(wchar_t ch)
 
 void ChatSender::sendMessage(const std::string& msg)
 {
+    
      // Open chat (Enter)
     sendKey(VK_RETURN);
     sleep_ms(1);
+
+    // Backspace 5 times
+    for (int i = 0; i < PRE_CHAT_BACKSPACE_COUNT; ++i)
+    {
+        sendKey(VK_BACK);
+        sleep_ms(1);
+    }
 
     int len = MultiByteToWideChar(
         CP_UTF8, 0,
