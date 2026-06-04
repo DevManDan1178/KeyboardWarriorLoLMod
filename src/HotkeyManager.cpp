@@ -158,8 +158,9 @@ void HotkeyManager::setEventHotkeyDuration(float duration) {
     return;
 }
 
+// Returns true if hotkeys are equal and not of bindType None
 static bool checkHotkeysEqual(Hotkey hotkey, Hotkey otherHotkey) {
-    return hotkey.bindType == otherHotkey.bindType && hotkey.keyCode == otherHotkey.keyCode && hotkey.modifiers == otherHotkey.modifiers;
+    return hotkey.bindType != BindType::None && (hotkey.bindType == otherHotkey.bindType && hotkey.keyCode == otherHotkey.keyCode && hotkey.modifiers == otherHotkey.modifiers);
 }
 
 static bool checkHotkeyIsInList(Hotkey hotkey, const std::vector<Hotkey> hotkeyList, int exceptForIndex = -1) {
