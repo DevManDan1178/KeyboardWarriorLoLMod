@@ -21,8 +21,8 @@ class LoLReader {
         void process();
         
         LoLReader(LoLEventHandler& _lolEventHandler);
-        bool isIdle; 
-        bool isInGame;
+        bool isIdle = true; 
+        bool isInGame = false;
     private:
         std::atomic<bool> running;  
         std::thread workerThread;
