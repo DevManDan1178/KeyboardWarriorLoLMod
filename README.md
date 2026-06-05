@@ -8,6 +8,13 @@ The mod supports two types of messages:
 * **Default Messages** — Always available and can be sent at any time.
 * **Event Messages** — Unlocked by specific in-game events and can only be sent after the corresponding event has been detected.
 
+## How to Setup
+- Click on `Releases`
+- Download a release (ZIP)
+- Unzip it somewhere you can remember
+- Launch the application by clicking on the KeyboardWarriorLoL.exe file in the unzipped folder
+  - If it is blocked by windows defender, you will have to allow it to run
+
 ## Features
 
 * Configure hotkeys for commonly used chat messages.
