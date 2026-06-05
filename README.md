@@ -12,7 +12,7 @@ The mod supports two types of messages:
 - Click on `Releases`
 - Download a release (ZIP)
 - Unzip it somewhere you can remember
-- Launch the application by clicking on the KeyboardWarriorLoL.exe file in the unzipped folder
+- Launch the application by clicking on the `KeyboardWarriorLoL.exe` file in the unzipped folder
   - If it is blocked by windows defender, you will have to allow it to run
 
 ## Features
