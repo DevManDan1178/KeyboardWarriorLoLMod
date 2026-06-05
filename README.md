@@ -120,11 +120,12 @@ Default Hotkey 1
 
 ## Usage
 
-1. Launch League of Legends alongside KeyboardWarriorLoL.
+1. Launch League of Legends alongside KeyboardWarriorLoL (KeyboardWarriorLoL.exe in the installed folder).
 2. Configure your message titles, messages, hotkeys, and mod configurations (if needed).
 3. Test it in practice tool (get used to it).
 4. Have fun with it.
 
+*Do not modify the other files in the mod's folder.*
 
 Please use this mod responsibly.
 - Don't use this to spam the chat.
